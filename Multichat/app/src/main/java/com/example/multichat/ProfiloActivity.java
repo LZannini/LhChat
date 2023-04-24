@@ -12,24 +12,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
-import com.example.multichat.ui.login.LoginActivity;
-
-public class HomeActivity extends AppCompatActivity {
+public class ProfiloActivity extends AppCompatActivity {
 
     private AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_profilo);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Il mio Profilo");
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
+        inflater.inflate(R.menu.menu_profilo, menu);
         return true;
     }
 
@@ -37,18 +37,32 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.item1:
-                openActivityCerca();
+
                 return true;
             case R.id.item2:
-                openActivityCrea();
+
                 return true;
             case R.id.item3:
-                openActivityMieStanze();
+                builder = new AlertDialog.Builder(this);
+                builder.setMessage("Vuoi davvero eliminare il tuo profilo?")
+                        .setCancelable(true)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Context ctx = getApplicationContext();
+                                PackageManager pm = ctx.getPackageManager();
+                                Intent intent = pm.getLaunchIntentForPackage(ctx.getPackageName());
+                                Intent mainIntent = Intent.makeRestartActivityTask(intent.getComponent());
+                                ctx.startActivity(mainIntent);
+                                Runtime.getRuntime().exit(0);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .show();
                 return true;
             case R.id.item4:
-                openActivityProfilo();
-                return true;
-            case R.id.item5:
                 builder = new AlertDialog.Builder(this);
                 builder.setMessage("Sei sicuro di voler uscire?")
                         .setCancelable(true)
@@ -72,30 +86,5 @@ public class HomeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
 
-    }
-
-    public void openActivityCerca(){
-        Intent intentH = new Intent(this, CercastanzaActivity.class);
-        startActivity(intentH);
-    }
-
-    public void openActivityCrea(){
-        Intent intentH = new Intent(this, CreastanzaActivity.class);
-        startActivity(intentH);
-    }
-
-    public void openActivityMieStanze(){
-        Intent intentH = new Intent(this, MystanzeActivity.class);
-        startActivity(intentH);
-    }
-
-    public void openActivityProfilo(){
-        Intent intentP = new Intent(this, ProfiloActivity.class);
-        startActivity(intentP);
-    }
-
-    public void openActivityLogin(){
-        Intent intentH = new Intent(this, LoginActivity.class);
-        startActivity(intentH);
     }
 }
