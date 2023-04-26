@@ -13,6 +13,20 @@
         android:theme="@style/Theme.Multichat"
         tools:targetApi="31">
         <activity
+            android:name=".ModificaPasswordActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ModificaUsernameActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ProfiloActivity"
             android:exported="false">
             <meta-data

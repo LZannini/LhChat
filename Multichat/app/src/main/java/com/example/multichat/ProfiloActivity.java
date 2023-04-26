@@ -37,10 +37,10 @@ public class ProfiloActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             case R.id.item1:
-
+                openActivityModificaUsername();
                 return true;
             case R.id.item2:
-
+                openActivityModificaPassword();
                 return true;
             case R.id.item3:
                 builder = new AlertDialog.Builder(this);
@@ -82,9 +82,27 @@ public class ProfiloActivity extends AppCompatActivity {
                         })
                         .show();
                 return true;
+            case R.id.item5:
+                openActivityHome();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    public void openActivityModificaUsername(){
+        Intent intentMU = new Intent(this, ModificaUsernameActivity.class);
+        startActivity(intentMU);
+    }
+
+    public void openActivityModificaPassword(){
+        Intent intentMP = new Intent(this, ModificaPasswordActivity.class);
+        startActivity(intentMP);
+    }
+
+    public void openActivityHome(){
+        Intent intentH = new Intent(this, HomeActivity.class);
+        startActivity(intentH);
     }
 }
