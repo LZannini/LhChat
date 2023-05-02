@@ -24,6 +24,7 @@ public class ProfiloActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Il mio Profilo");
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -82,11 +83,9 @@ public class ProfiloActivity extends AppCompatActivity {
                         })
                         .show();
                 return true;
-            case R.id.item5:
+            default:
                 openActivityHome();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
 
     }
@@ -104,5 +103,11 @@ public class ProfiloActivity extends AppCompatActivity {
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        return;
     }
 }

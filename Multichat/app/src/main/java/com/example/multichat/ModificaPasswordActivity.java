@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,6 +24,7 @@ public class ModificaPasswordActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Modifica Password");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         btnC = (Button) findViewById(R.id.btn_confirm);
         btnC.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +55,13 @@ public class ModificaPasswordActivity extends AppCompatActivity {
                 alert.show();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ProfiloActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
     }
 
     public void openActivityProfilo(){

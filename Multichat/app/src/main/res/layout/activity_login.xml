@@ -17,7 +17,7 @@
         android:id="@+id/imageView_chat"
         android:layout_width="171dp"
         android:layout_height="341dp"
-        android:layout_marginTop="464dp"
+        android:layout_marginTop="372dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="144dp"
-        android:background="@color/material_dynamic_neutral70"
+        android:background="@color/gray"
         android:fontFamily="sans-serif-condensed-medium"
         android:hint="Utente: "
         android:inputType="textEmailAddress"
@@ -44,7 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/material_dynamic_neutral70"
+        android:background="@color/gray"
         android:fontFamily="sans-serif-condensed-medium"
         android:hint="Password: "
         android:imeActionLabel="@string/action_sign_in_short"
@@ -77,27 +77,12 @@
         app:layout_constraintVertical_bias="0.2"
         tools:text="Login" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
-
     <TextView
         android:id="@+id/textView_registrazione"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="356dp"
         android:clickable="true"
-        android:enabled="true"
         android:fontFamily="sans-serif-medium"
         android:minHeight="48dp"
         android:text="@string/non_registrato"
@@ -105,9 +90,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView_lhchat"

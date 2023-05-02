@@ -7,8 +7,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -38,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    private androidx.appcompat.app.AlertDialog.Builder builder;
     private Button btnL;
     private TextView tvR;
 
@@ -94,5 +97,25 @@ public class LoginActivity extends AppCompatActivity {
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
+    }
+
+    @Override
+    public void onBackPressed() {
+        builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setMessage("Sei sicuro di voler uscire?")
+                .setCancelable(true)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                })
+                .show();
+        return;
     }
 }

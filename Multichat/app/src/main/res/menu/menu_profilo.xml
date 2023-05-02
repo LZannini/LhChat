@@ -18,9 +18,4 @@
         android:title="Disconnetti"
         app:showAsAction="never" />
 
-    <item android:id="@+id/item5"
-        android:icon="@drawable/icon_turnback"
-        android:title="Cerca Stanza"
-        app:showAsAction="ifRoom" />
-
 </menu>

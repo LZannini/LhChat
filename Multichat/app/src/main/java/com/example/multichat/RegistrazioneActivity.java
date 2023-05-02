@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +24,8 @@ public class RegistrazioneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registrazione);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        actionBar.setTitle("Registrazione");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         btnR = (Button) findViewById(R.id.btn_registra);
         btnR.setOnClickListener(new View.OnClickListener() {
@@ -43,8 +45,21 @@ public class RegistrazioneActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
+    }
+
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        return;
     }
 }

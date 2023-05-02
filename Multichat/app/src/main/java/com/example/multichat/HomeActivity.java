@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             case R.id.item5:
                 builder = new AlertDialog.Builder(this);
-                builder.setMessage("Sei sicuro di voler uscire?")
+                builder.setMessage("Sei sicuro di voler disconnetterti?")
                         .setCancelable(true)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -97,5 +97,28 @@ public class HomeActivity extends AppCompatActivity {
     public void openActivityLogin(){
         Intent intentH = new Intent(this, LoginActivity.class);
         startActivity(intentH);
+    }
+
+    @Override
+    public void onBackPressed() {
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Sei sicuro di voler disconnetterti?")
+                .setCancelable(true)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Context ctx = getApplicationContext();
+                        PackageManager pm = ctx.getPackageManager();
+                        Intent intent = pm.getLaunchIntentForPackage(ctx.getPackageName());
+                        Intent mainIntent = Intent.makeRestartActivityTask(intent.getComponent());
+                        ctx.startActivity(mainIntent);
+                        Runtime.getRuntime().exit(0);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                })
+                .show();
+        return;
     }
 }
