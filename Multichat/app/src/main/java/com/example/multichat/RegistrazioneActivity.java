@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-
-import com.example.multichat.ui.login.LoginActivity;
 
 public class RegistrazioneActivity extends AppCompatActivity {
 

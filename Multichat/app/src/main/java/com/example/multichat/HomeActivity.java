@@ -1,6 +1,5 @@
 package com.example.multichat;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,9 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toolbar;
-
-import com.example.multichat.ui.login.LoginActivity;
 
 public class HomeActivity extends AppCompatActivity {
 

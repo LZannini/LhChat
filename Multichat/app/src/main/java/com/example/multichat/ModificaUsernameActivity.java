@@ -12,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.multichat.ui.login.LoginActivity;
-
 public class ModificaUsernameActivity extends AppCompatActivity {
 
     private Button btnC;
