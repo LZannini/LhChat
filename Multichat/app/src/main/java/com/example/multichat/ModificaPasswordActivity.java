@@ -16,7 +16,6 @@ public class ModificaPasswordActivity extends AppCompatActivity {
 
     private Button btnC;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
