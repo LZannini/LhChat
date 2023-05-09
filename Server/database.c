@@ -38,7 +38,7 @@ int insert_utente(char *username, char *password){
         }
         else{
             printf("DB: Utente inserito con successo.\n");
-            flag = 1;
+            out = 1;
         }
         PQclear(query);
     }
@@ -77,21 +77,20 @@ int delete_utente(char *username){
     return out;
 }
 
-PGresult *check_if_signup(char *username, char *password){
+int verifica_se_utente_registrato(char *username, char *password){
     PGconn *conn = PQconnectdb(CONN_STRING);
     PGresult *res;
     char query[1024];
-    char error[1024];
+    int val;
 
     if(conn != NULL){
         sprintf(query, "select * from utente WHERE username = $$%s$$ AND password = $$%s$$", username, password);
         res = PQexec(conn, query);
-        strcpy(error, PQresultErrorMessage(res));
-        if(strlen(error) > 0){
-            printf("%s\n", error);
-            printf("DB: Errore! Utente non trovato. \n");
-            PQclear(res);
-            res = NULL;
+        
+        if(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) == 0){
+            val = 1;
+        }else{
+            val = 0;
         }
     }
     else
@@ -99,7 +98,7 @@ PGresult *check_if_signup(char *username, char *password){
 
 
     disconnetti_db(miaconn);
-    return utente_registrato_db;
+    return val;
 
 
 }

@@ -1,0 +1,19 @@
+#ifndef GESTORE_RICHIESTE_H
+#define GESTORE_RICHIESTE_H
+
+  
+
+// comandi client
+#define LOGIN 001
+#define REG 002
+#define CREAGRUP 003
+#define INVIAMESS 004
+#define CERCAGRUP 005
+#define INVIANOTIFICA 006
+#define ACCETTARIC 007
+#define RIFIUTARIC 008
+#define MODPASS 009
+#define MODUSER 010
+#define VEDISTANZE 011
+#define VEDPART 012
+
