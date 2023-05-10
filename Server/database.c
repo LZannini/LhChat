@@ -28,7 +28,7 @@ PGresult *select_stanze_utente(char *username){
 
     if(conn != NULL)
     {
-        sprintf(query, "select * from appartenenza_stanza where username = $$%s$$", username);
+        sprintf(query, "select s.id_stanza, s.nome_stanza from stanza s join appartenenza_stanza a on s.id_stanza=a.id_stanza where a.username = $$%s$$", username);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
@@ -269,9 +269,10 @@ int check_if_registrato(char *username, char *password){
 
         if(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples(res) == 0){
             val = 1;
-        }else{
+        }else if(PQresultStatus(res) == PGRES_TUPLES_OK && PQntuples > 0){
             val = 0;
-        }
+        }else{
+            val = 2; //perchè c'è stato un errore
     }
     else
         printf("DB: Errore! Connessione al database fallita. \n");
