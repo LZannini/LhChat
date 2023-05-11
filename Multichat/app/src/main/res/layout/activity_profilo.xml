@@ -45,4 +45,27 @@
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_mystanze"
+        android:layout_width="98dp"
+        android:layout_height="38dp"
+        android:layout_gravity="start"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="64dp"
+        android:backgroundTint="#AAABAE"
+        android:fontFamily="sans-serif-black"
+        android:text="Le mie Stanze"
+        android:textColor="#000000"
+        android:textSize="8dp"
+        app:icon="@android:drawable/ic_menu_myplaces"
+        app:iconSize="23dp"
+        app:iconTint="#FF5722"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.127"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.105"
+        tools:text="Le mie Stanze" />
 </androidx.constraintlayout.widget.ConstraintLayout>

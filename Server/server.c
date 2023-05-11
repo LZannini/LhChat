@@ -17,9 +17,12 @@ void *gestisci(void *arg){
   int sock = *(int *) arg;
   int read_size;
   char buffer[2000];
+  char *risposta;
   
   while(read_size = recv(sock, buffer, 2000, 0) > 0){
-    gestisci_richiesta_client(buffer);
+    gestisci_richiesta_client(buffer, risposta);
+    send(sock, risposta, strlen(risposta), 0);
+    free(risposta);
   }
   
   close((int *) arg);

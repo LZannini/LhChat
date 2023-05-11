@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class ProfiloActivity extends AppCompatActivity {
 
     private AlertDialog.Builder builder;
+    private Button btnMystanze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,12 @@ public class ProfiloActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Il mio Profilo");
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        btnMystanze = (Button) findViewById(R.id.btn_mystanze);
+        btnMystanze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { }
+        });
     }
 
     @Override
@@ -103,6 +112,11 @@ public class ProfiloActivity extends AppCompatActivity {
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
+    }
+
+    public void openActivityMyStanze() {
+        Intent intentMS = new Intent(this, MystanzeActivity.class);
+        startActivity(intentMS);
     }
 
     @Override
