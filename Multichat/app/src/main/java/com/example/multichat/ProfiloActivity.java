@@ -32,7 +32,7 @@ public class ProfiloActivity extends AppCompatActivity {
         btnMystanze = (Button) findViewById(R.id.btn_mystanze);
         btnMystanze.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { }
+            public void onClick(View view) { openActivityMyStanze(); }
         });
     }
 

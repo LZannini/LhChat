@@ -48,8 +48,8 @@
 
     <Button
         android:id="@+id/btn_mystanze"
-        android:layout_width="98dp"
-        android:layout_height="38dp"
+        android:layout_width="112dp"
+        android:layout_height="41dp"
         android:layout_gravity="start"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="64dp"
@@ -57,9 +57,9 @@
         android:fontFamily="sans-serif-black"
         android:text="Le mie Stanze"
         android:textColor="#000000"
-        android:textSize="8dp"
+        android:textSize="9dp"
         app:icon="@android:drawable/ic_menu_myplaces"
-        app:iconSize="23dp"
+        app:iconSize="30dp"
         app:iconTint="#FF5722"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
