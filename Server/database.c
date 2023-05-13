@@ -51,7 +51,7 @@ PGresult *select_messaggi_stanza(int id_stanza){
     char query[1024], error[1024];
 
     if (conn != NULL){
-        sprintf(query, "select * from messaggio where id_stanza = $$%d$$ ORDER BY ora_invio", id_stanza);
+        sprintf(query, "select mittente, ora_invio, testo from messaggio where id_stanza = $$%d$$ ORDER BY ora_invio", id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
@@ -203,14 +203,14 @@ int delete_utente(char *username){
     return out;
 }
 
-int insert_messaggio(char *mittente, int id_stanza, char *ora_invio, char *testo){
+int insert_messaggio(char *mittente, int id_stanza, time_t *ora_invio, char *testo){
     PGconn *conn = PQconnectdb(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s%%, $$%d$$, $$%s%%, $$%d$$)", mittente, id_stanza, ora_invio, testo);
+        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s%%, $$%d$$, $$%s%%, $$%ld$$)", mittente, id_stanza, ora_invio, testo);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
