@@ -92,7 +92,7 @@ void richiesta_vedi_stanze(char *richiesta, char *risposta){
   stanze_trovate = select_stanze_utente(username);
   if(stanze_trovate == NULL){
     produci_risposta_mie_stanze(VEDISTANZEERR, stanze_trovate, risposta);
-  }else if(PQntuples(res) == 0){
+  }else if(PQntuples(stanze_trovate) == 0){
     produci_risposta_mie_stanze(STANZENONTROVATE, stanze_trovate, risposta);
   }else{
     produci_risposta_mie_stanze(VEDISTANZEOK, stanze_trovate, risposta);
@@ -171,11 +171,11 @@ void richiesta_apri_chat(char *richiesta, char *risposta){
   mess_trovati = select_messaggi_stanza(id_stanza);
   
   if(mess_trovati == NULL){
-    produci_risposta_vedi_mess(APRICHATERR, mess_trovati, risposta);
-  else if(PQntuples(mess_trovati) == 0){
-    produci_risposta_vedi_mess(CHATVUOTA, mess_trovati, risposta);
+    produci_risposta_vedi_chat(APRICHATERR, mess_trovati, risposta);
+  }else if(PQntuples(mess_trovati) == 0){
+    produci_risposta_vedi_chat(CHATVUOTA, mess_trovati, risposta);
   }else{
-    produci_risposta_vedi_mess(APRICHATOK, mess_trovati, risposta);
+    produci_risposta_vedi_chat(APRICHATOK, mess_trovati, risposta);
   }
 }
   
@@ -202,6 +202,7 @@ void richiesta_elimina_stanza(char *richiesta, char *risposta){
   int eliminato = 0;
   
   char *codice;
+  char *id_stanza_str;
   int id_stanza;
   
   codice = strtok(richiesta, "|");
@@ -221,6 +222,7 @@ void richiesta_abbandona_stanza(char *richiesta, char *risposta){
   int eliminato = 0;
   
   char *codice;
+  char *id_stanza_str;
   char *username;
   int id_stanza;
   
@@ -232,11 +234,155 @@ void richiesta_abbandona_stanza(char *richiesta, char *risposta){
   
   eliminato = delete_appartenenza_stanza(username, id_stanza);
   if(eliminato == 0){
-    produci_risposta_abbandona_stanza(EESCIDASTANZAERR, risposta);
+    produci_risposta_abbandona_stanza(ESCIDASTANZAERR, risposta);
   }else{
     produci_risposta_abbandona_stanza(ESCIDASTANZAOK, risposta);
   }
 }  
+
+void richiesta_cerca_stanza(char *richiesta, char *risposta){
+  PGresult *stanze_trovate;
+  
+  char *codice;
+  char *nome_stanza;
+  
+  codice = strtok(richiesta, "|");
+  nome_stanza = strtok(NULL, "|");
+  
+  stanze_trovate = check_if_stanza_esiste(nome_stanza);
+  if(stanze_trovate == NULL){
+    produci_risposta_cerca_stanze(CERCASTANZAERR, stanze_trovate, risposta);
+  }else if(PQntuples(stanze_trovate) == 0){
+    produci_risposta_cerca_stanze(STANZENONTROVATE, stanze_trovate, risposta);
+  }else{
+    produci_risposta_cerca_stanze(CERCASTANZAOK, stanze_trovate, risposta);
+  }
+}
+
+void richiesta_modifica_password(char *richiesta, char *risposta){
+  int modificata = 0;
+  
+  char *codice;
+  char *username;
+  char *nuova_pass;
+  
+  codice = strtok(richiesta, "|");
+  username = strtok(NULL, "|");
+  nuova_pass = strtok(NULL, "|");
+  
+  modificata = update_password(username, nuova_pass);
+  if(modificata == 0){
+    produci_risposta_up_password(MODPASSERR, risposta);
+  }else(modifata == 1){
+    produci_risposta_up_password(MODPASSOK, risposta);
+  }
+}
+
+void richiesta_modifica_password(char *richiesta, char *risposta){
+  int modificato = 0;
+  
+  char *codice;
+  char *username;
+  char *nuovo_user;
+  
+  codice = strtok(richiesta, "|");
+  username = strtok(NULL, "|");
+  nuovo_user = strtok(NULL, "|");
+  
+  modificato = update_username(username, nuovo_user);
+  if(modificato == 0){
+    produci_risposta_up_user(MODUSERERR, risposta);
+  }else(modifato == 1){
+    produci_risposta_up_user(MODUSEROK, risposta);
+  }
+}
+
+void richiesta_inserisci_richiesta(char *richiesta, char *risposta){
+  int inserito = 0;
+  
+  char *codice;
+  char *username;
+  char *id_stanza_str;
+  int id_stanza;
+  
+  codice = strtok(richiesta, "|");
+  username = strtok(NULL, "|");
+  id_stanza_str = strtok(NULL, "|");
+  id_stanza = atoi(id_stanza_str);
+  
+  inserito = insert_richiesta_stanza(username, id_stanza);
+  if(inserito == 0){
+    produci_risposta_ins_ric(RICHIESTASTANZAERR, risposta);
+  }else{
+    produci_risposta_ins_ric(RICHIESTASTANZAOK, risposta);
+  }
+}
+
+void richiesta_visualizza_richieste(char *richiesta, char *risposta){
+  PGresult *richieste_trovate;
+  
+  char *codice;
+  char *id_stanza_str;
+  int id_stanza;
+  
+  codice = strtok(richiesta, "|");
+  id_stanza_str(NULL, "|");
+  id_stanza = atoi(id_stanza_str);
+  
+  richieste_trovate = select_richieste_stanza(id_stanza);
+  if(richieste_trovate == NULL){
+    produci_risposta_vedi_ric(VEDIRICHIESTEERR, richieste_trovate, risposta);
+  }else if(PQntuples(richieste_trovate) == 0){
+    produci_risposta_vedi_ric(NORICHIESTE, richieste_trovate, risposta);
+  }else{
+    produci_risposta_vedi_ric(VEDIRICHIESTE, richieste_trovate, risposta);
+  }
+}
+
+void richiesta_verifica_admin(char *richiesta, char *risposta){
+  PGresult *admin_trovato
+  
+  char *codice;
+  char *username;
+  char *id_stanza_str;
+  int id_stanza;
+  
+  codice = strtok(richiesta, "|");
+  username = strtok(NULL, "|");
+  id_stanza_str(NULL, "|");
+  id_stanza = atoi(id_stanza_str);
+  
+  admin_trovato = check_if_admin(username, id_stanza);
+  if(admin_trovato == NULL){
+    produci_risposta_admin(ADMINERR, admin_trovato, risposta);
+  }else if(PQntuples(admin_trovato) == 0){
+    produci_risposta_admin(ADMINNO, admin_trovato, risposta);
+  }else{
+    produci_risposta_admin(ADMINSI, admin_trovato, risposta);
+  }
+}
+
+void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
+  PGresult *partecipanti;
+  
+  char *codice;
+  char *id_stanza_str;
+  int id_stanza;
+  
+  codice = strtok(richiesta, "|");
+  id_stanza_str = strtok(NULL, "|");
+  id_stanza = atoi(id_stanza_str);
+  
+  partecipanti = select_partecipanti(id_stanza);
+  if(partecipanti == NULL){
+    produci_risposta_partecipanti(VEDIPARTERR, partecipanti, risposta);
+  }else if(PQntuples(partecipanti)) == 0){
+    produci_risposta_partecipanti(NOPART, partecipanti, risposta);
+  }else{
+    produci_risposta_partecipanti(VEDIPARTOK, partecipanti, risposta);
+  }
+}
+  
 
 void gestisci_richiesta_client(char *richiesta, char *risposta){
   int cod_comando;
@@ -266,4 +412,19 @@ void gestisci_richiesta_client(char *richiesta, char *risposta){
     richiesta_elimina_stanza(richiesta, risposta);
   }else if(cod_comando == ESCIDASTANZA){
     richiesta_abbandona_stanza(richiesta, risposta);
+  }else if(cod_comando == CERCASTANZA){
+    richiesta_cerca_stanza(richiesta, risposta);
+  }else if(cod_comando == MODPASS){
+    richiesta_modifica_password(richiesta, risposta);
+  }else if(cod_comando == MODUSER){
+    richiesta_modifica_username(richiesta, risposta);
+  }else if(cod_comando == RICHIESTASTANZA){
+    richiesta_inserisci_richiesta(richiesta, risposta);
+  }else if(cod_comando == VEDIRICHIESTE){
+    richiesta_visualizza_richieste(richiesta, risposta);
+  }else if(cod_comando == ADMIN){
+    richiesta_verifica_admin(richiesta, risposta);
+  }else if(cod_comando == VEDIPART){
+    richiesta_vedi_partecipanti(richiesta, risposta);
   }
+}

@@ -1,3 +1,5 @@
+//per compilare => gcc -o wbc server.c controller.c gestore_richieste.c database.c -I/usr/include/postgresql -L/usr/lib/postgresql/15/lib -lpq
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
