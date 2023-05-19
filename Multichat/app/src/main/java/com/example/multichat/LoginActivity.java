@@ -1,5 +1,9 @@
 package com.example.multichat;
 
+import static com.example.multichat.controller.Controller.LOGINERR;
+import static com.example.multichat.controller.Controller.LOGINNONTROVATO;
+import static com.example.multichat.controller.Controller.LOGINOK;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,10 +19,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.multichat.controller.Controller;
 import com.example.multichat.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private int codComando;
     private ActivityLoginBinding binding;
     private androidx.appcompat.app.AlertDialog.Builder builder;
     private Button btnL;
@@ -39,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.btnLogin;
 
+        Controller controller = new Controller();
+
         tvR = (TextView) findViewById(R.id.textView_registrazione);
         tvR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,16 +59,47 @@ public class LoginActivity extends AppCompatActivity {
         btnL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setMessage("Login effettuato con successo!")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                openActivityHome();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+
+                try {
+                    codComando = controller.login(username, password);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (codComando == Integer.parseInt(LOGINOK)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage("Login effettuato con successo!")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    openActivityHome();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else if (codComando == Integer.parseInt(LOGINERR)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage("Errore durante il login, riprova.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else if (codComando == Integer.parseInt(LOGINNONTROVATO)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage("Username e/o password errati, riprova.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
     }
