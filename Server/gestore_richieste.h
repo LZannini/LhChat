@@ -4,23 +4,23 @@
 #include <libpq-fe.h>
 
 // comandi client
-#define LOGIN 001
-#define REG 002
-#define CREASTANZA 003
-#define CERCASTANZA 004
-#define INVIAMESS 005
-#define APRICHAT 006
-#define ACCETTARIC 007
-#define MODPASS 008
-#define MODUSER 009
-#define VEDISTANZE 010
-#define VEDIPART 011
-#define ELIMINAUSER 012
-#define ELIMINASTANZA 013
-#define ESCIDASTANZA 014
-#define RICHIESTASTANZA 015
-#define VEDIRICHIESTE 016
-#define ADMIN 017
+#define LOGIN 1
+#define REG 2
+#define CREASTANZA 3
+#define CERCASTANZA 4
+#define INVIAMESS 5
+#define APRICHAT 6
+#define ACCETTARIC 7
+#define MODPASS 8
+#define MODUSER 9
+#define VEDISTANZE 10
+#define VEDIPART 11
+#define ELIMINAUSER 12
+#define ELIMINASTANZA 13
+#define ESCIDASTANZA 14
+#define RICHIESTASTANZA 15
+#define VEDIRICHIESTE 16
+#define ADMIN 17
 // comandi OK server
 #define LOGINOK 101
 #define REGOK 102
@@ -48,7 +48,7 @@
 #define APRICHATERR 206
 #define ACCETTARICERR 207
 #define MODPASSERR 208
-#define MODPASSUSER 209
+#define MODUSERERR 209
 #define VEDISTANZEERR 210
 #define VEDIPARTERR 211
 #define ELIMINAUSERERR 212

@@ -13,12 +13,10 @@ void richiesta_login(char *richiesta, char *risposta){
   int trovato = 0;
   int utente_registrato;
   
-  char *codice;
   char *username;
   char *password;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   password = strtok(NULL, "|");
   
   utente_registrato = check_if_registrato(username, password);
@@ -35,13 +33,12 @@ void richiesta_registrazione(char *richiesta, char *risposta){
   int utente_registrato;
   int inserito = 0;
   
-  char *codice;
   char *username;
   char *password;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   password = strtok(NULL, "|");
+  
   
   utente_registrato = check_if_registrato(username, password);
   if(utente_registrato == 0){         
@@ -59,18 +56,16 @@ void richiesta_registrazione(char *richiesta, char *risposta){
 void richiesta_new_stanza(char *richiesta, char *risposta){
   int inserito = 0;
   
-  char *codice;
   int id_stanza;
   char *id_stanza_str;
   char *nome_stanza;
   char *nome_admin;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
+  id_stanza_str = strtok(richiesta, "|");
   id_stanza = atoi(id_stanza_str);
   
-  nome_stanza = (NULL, "|");
-  nome_admin = (NULL, "|");
+  nome_stanza = strtok(NULL, "|");
+  nome_admin = strtok(NULL, "|");
   
   inserito = insert_stanza(id_stanza, nome_stanza, nome_admin);
   if(inserito == 0){
@@ -83,11 +78,9 @@ void richiesta_new_stanza(char *richiesta, char *risposta){
 void richiesta_vedi_stanze(char *richiesta, char *risposta){
   PGresult *stanze_trovate;
   
-  char *codice;
   char *username;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   
   stanze_trovate = select_stanze_utente(username);
   if(stanze_trovate == NULL){
@@ -103,7 +96,6 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta){
 
   int inserito = 0;
   
-  char *codice;
   char *mittente;
   char *id_stanza_str;
   char *orario;
@@ -113,8 +105,7 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta){
   struct tm tm_orario;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  mittente = strtok(NULL, "|");
+  mittente = strtok(richiesta, "|");
   id_stanza_str = strtok(NULL, "|");
   orario = strtok(NULL, "|");
   testo = strtok(NULL, "|");
@@ -136,13 +127,11 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta){
 void richiesta_accetta_richiesta(char *richiesta, char *risposta){
   int inserito = 0;
   
-  char *codice;
   char *id_stanza_str;
   int id_stanza;
   char *username;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
+  id_stanza_str = strtok(richiesta, "|");
   id_stanza = atoi(id_stanza_str);
   username = strtok(NULL, "|");
   
@@ -159,12 +148,10 @@ void richiesta_accetta_richiesta(char *richiesta, char *risposta){
 void richiesta_apri_chat(char *richiesta, char *risposta){
   PGresult *mess_trovati;
   
-  char *codice;
   char *id_stanza_str;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
+  id_stanza_str = strtok(richiesta, "|");
   
   id_stanza = atoi(id_stanza_str);
   
@@ -183,11 +170,9 @@ void richiesta_apri_chat(char *richiesta, char *risposta){
 void richiesta_elimina_utente(char *richiesta, char *risposta){
   int eliminato = 0;
   
-  char *codice;
   char *username;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL,"|");
+  username = strtok(richiesta,"|");
   
   eliminato = delete_utente(username);
   if(eliminato == 0){
@@ -201,12 +186,10 @@ void richiesta_elimina_utente(char *richiesta, char *risposta){
 void richiesta_elimina_stanza(char *richiesta, char *risposta){
   int eliminato = 0;
   
-  char *codice;
   char *id_stanza_str;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL,"|");
+  id_stanza_str = strtok(richiesta,"|");
   
   id_stanza = atoi(id_stanza_str);
   
@@ -221,13 +204,11 @@ void richiesta_elimina_stanza(char *richiesta, char *risposta){
 void richiesta_abbandona_stanza(char *richiesta, char *risposta){
   int eliminato = 0;
   
-  char *codice;
   char *id_stanza_str;
   char *username;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL,"|");
+  id_stanza_str = strtok(richiesta,"|");
   username = strtok(NULL, "|");
   
   id_stanza = atoi(id_stanza_str);
@@ -243,11 +224,9 @@ void richiesta_abbandona_stanza(char *richiesta, char *risposta){
 void richiesta_cerca_stanza(char *richiesta, char *risposta){
   PGresult *stanze_trovate;
   
-  char *codice;
   char *nome_stanza;
   
-  codice = strtok(richiesta, "|");
-  nome_stanza = strtok(NULL, "|");
+  nome_stanza = strtok(richiesta, "|");
   
   stanze_trovate = check_if_stanza_esiste(nome_stanza);
   if(stanze_trovate == NULL){
@@ -262,37 +241,33 @@ void richiesta_cerca_stanza(char *richiesta, char *risposta){
 void richiesta_modifica_password(char *richiesta, char *risposta){
   int modificata = 0;
   
-  char *codice;
   char *username;
   char *nuova_pass;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   nuova_pass = strtok(NULL, "|");
   
   modificata = update_password(username, nuova_pass);
   if(modificata == 0){
     produci_risposta_up_password(MODPASSERR, risposta);
-  }else(modifata == 1){
+  }else if(modificata == 1){
     produci_risposta_up_password(MODPASSOK, risposta);
   }
 }
 
-void richiesta_modifica_password(char *richiesta, char *risposta){
+void richiesta_modifica_username(char *richiesta, char *risposta){
   int modificato = 0;
   
-  char *codice;
   char *username;
   char *nuovo_user;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   nuovo_user = strtok(NULL, "|");
   
   modificato = update_username(username, nuovo_user);
   if(modificato == 0){
     produci_risposta_up_user(MODUSERERR, risposta);
-  }else(modifato == 1){
+  }else if(modificato == 1){
     produci_risposta_up_user(MODUSEROK, risposta);
   }
 }
@@ -300,13 +275,11 @@ void richiesta_modifica_password(char *richiesta, char *risposta){
 void richiesta_inserisci_richiesta(char *richiesta, char *risposta){
   int inserito = 0;
   
-  char *codice;
   char *username;
   char *id_stanza_str;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
+  username = strtok(richiesta, "|");
   id_stanza_str = strtok(NULL, "|");
   id_stanza = atoi(id_stanza_str);
   
@@ -321,12 +294,10 @@ void richiesta_inserisci_richiesta(char *richiesta, char *risposta){
 void richiesta_visualizza_richieste(char *richiesta, char *risposta){
   PGresult *richieste_trovate;
   
-  char *codice;
   char *id_stanza_str;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str(NULL, "|");
+  id_stanza_str = strtok(richiesta, "|");
   id_stanza = atoi(id_stanza_str);
   
   richieste_trovate = select_richieste_stanza(id_stanza);
@@ -340,16 +311,14 @@ void richiesta_visualizza_richieste(char *richiesta, char *risposta){
 }
 
 void richiesta_verifica_admin(char *richiesta, char *risposta){
-  PGresult *admin_trovato
+  PGresult *admin_trovato;
   
-  char *codice;
   char *username;
   char *id_stanza_str;
   int id_stanza;
-  
-  codice = strtok(richiesta, "|");
-  username = strtok(NULL, "|");
-  id_stanza_str(NULL, "|");
+
+  username = strtok(richiesta, "|");
+  id_stanza_str = strtok(NULL, "|");
   id_stanza = atoi(id_stanza_str);
   
   admin_trovato = check_if_admin(username, id_stanza);
@@ -365,18 +334,16 @@ void richiesta_verifica_admin(char *richiesta, char *risposta){
 void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
   PGresult *partecipanti;
   
-  char *codice;
   char *id_stanza_str;
   int id_stanza;
   
-  codice = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
+  id_stanza_str = strtok(richiesta, "|");
   id_stanza = atoi(id_stanza_str);
   
   partecipanti = select_partecipanti(id_stanza);
   if(partecipanti == NULL){
     produci_risposta_partecipanti(VEDIPARTERR, partecipanti, risposta);
-  }else if(PQntuples(partecipanti)) == 0){
+  }else if(PQntuples(partecipanti) == 0){
     produci_risposta_partecipanti(NOPART, partecipanti, risposta);
   }else{
     produci_risposta_partecipanti(VEDIPARTOK, partecipanti, risposta);
@@ -387,44 +354,49 @@ void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
 void gestisci_richiesta_client(char *richiesta, char *risposta){
   int cod_comando;
   char *comando;
-  risposta = malloc(256);
+  char *resto_richiesta;
+
   
+
   comando = strtok(richiesta, "|");
+  resto_richiesta = strtok(NULL, "");
   cod_comando = atoi(comando);
+  printf("Il comando da analizzare è: %d\n", cod_comando);
+
   
   if(cod_comando == LOGIN){
-    richiesta_login(richiesta, risposta);
+    richiesta_login(resto_richiesta, risposta);
   }else if(cod_comando == REG){
-    richiesta_registrazione(richiesta, risposta);
+    richiesta_registrazione(resto_richiesta, risposta);
   }else if(cod_comando == CREASTANZA){
-    richiesta_new_stanza(richiesta, risposta);
+    richiesta_new_stanza(resto_richiesta, risposta);
   }else if(cod_comando == VEDISTANZE){
-    richiesta_vedi_stanze(richiesta, risposta);
+    richiesta_vedi_stanze(resto_richiesta, risposta);
   }else if(cod_comando == INVIAMESS){
-    richiesta_invia_messaggio(richiesta, risposta);
+    richiesta_invia_messaggio(resto_richiesta, risposta);
   }else if(cod_comando == ACCETTARIC){
-    richiesta_accetta_richiesta(richiesta, risposta);
+    richiesta_accetta_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == APRICHAT){
-    richiesta_apri_chat(richiesta, risposta);
+    richiesta_apri_chat(resto_richiesta, risposta);
   }else if(cod_comando == ELIMINAUSER){
-    richiesta_elimina_utente(richiesta, risposta);
+    richiesta_elimina_utente(resto_richiesta, risposta);
   }else if(cod_comando == ELIMINASTANZA){
-    richiesta_elimina_stanza(richiesta, risposta);
+    richiesta_elimina_stanza(resto_richiesta, risposta);
   }else if(cod_comando == ESCIDASTANZA){
-    richiesta_abbandona_stanza(richiesta, risposta);
+    richiesta_abbandona_stanza(resto_richiesta, risposta);
   }else if(cod_comando == CERCASTANZA){
-    richiesta_cerca_stanza(richiesta, risposta);
+    richiesta_cerca_stanza(resto_richiesta, risposta);
   }else if(cod_comando == MODPASS){
-    richiesta_modifica_password(richiesta, risposta);
+    richiesta_modifica_password(resto_richiesta, risposta);
   }else if(cod_comando == MODUSER){
-    richiesta_modifica_username(richiesta, risposta);
+    richiesta_modifica_username(resto_richiesta, risposta);
   }else if(cod_comando == RICHIESTASTANZA){
-    richiesta_inserisci_richiesta(richiesta, risposta);
+    richiesta_inserisci_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == VEDIRICHIESTE){
-    richiesta_visualizza_richieste(richiesta, risposta);
+    richiesta_visualizza_richieste(resto_richiesta, risposta);
   }else if(cod_comando == ADMIN){
-    richiesta_verifica_admin(richiesta, risposta);
+    richiesta_verifica_admin(resto_richiesta, risposta);
   }else if(cod_comando == VEDIPART){
-    richiesta_vedi_partecipanti(richiesta, risposta);
+    richiesta_vedi_partecipanti(resto_richiesta, risposta);
   }
 }
