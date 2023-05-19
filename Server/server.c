@@ -31,7 +31,7 @@ void *gestisci(void *arg){
   }
   
   gestisci_richiesta_client(buffer, &risposta);
-  printf("Server: la risposta da inviare è: %s\n", risposta);
+  //printf("Server: la risposta da inviare è: %s\n", risposta);
   if (risposta != NULL) {
     send(sock, risposta, strlen(risposta), 0);
   } else {

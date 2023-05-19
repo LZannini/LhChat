@@ -394,7 +394,7 @@ int check_if_registrato(char *username, char *password){
     int val;
 
     if(conn != NULL){
-        printf("Sever: connessione con il db effettuata con successo\n");
+        printf("Server: connessione con il db effettuata con successo\n");
         sprintf(query, "select * from utente WHERE username = $$%s$$ AND password = $$%s$$", username, password);
         res = PQexec(conn, query);
 

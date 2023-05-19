@@ -18,9 +18,9 @@ void produci_risposta_registrazione(const int comando, char *risposta, char *use
   
 void produci_risposta_login(const int comando, char *risposta){
   if(comando == LOGINOK){
-    printf(risposta, "%d|Login effettuato con successo", comando);
+    sprintf(risposta, "%d|Login effettuato con successo", comando);
   }else if(comando == LOGINERR){
-    printf(risposta, "%d|Errore nella fase di login, riprova", comando);
+    sprintf(risposta, "%d|Errore nella fase di login, riprova", comando);
   }else if(comando == LOGINNONTROVATO){
     sprintf(risposta, "%d|Utente non registrato, effettua prima la registrazione", comando);
   }
