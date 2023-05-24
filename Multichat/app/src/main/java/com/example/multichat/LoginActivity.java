@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.multichat.controller.Controller;
 import com.example.multichat.databinding.ActivityLoginBinding;
+import com.example.multichat.model.Utente;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -68,7 +69,10 @@ public class LoginActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
 
+
                 if (codComando == Integer.parseInt(LOGINOK)) {
+                    Utente u = new Utente(username, password);
+                    controller.setUtente(u);
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage("Login effettuato con successo!")
                             .setCancelable(false)

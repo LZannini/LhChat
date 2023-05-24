@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.multichat.model.Utente;
+
 public class Controller {
     //comandi client
     public static final String LOGIN = "001";
@@ -77,7 +79,6 @@ public class Controller {
     //altri comandi
     public static final String LOGINNONTROVATO = "301";
     public static final String GIAREGISTRATO = "302";
-    public static final String STANZAGIAESISTE = "303";
     public static final String CHATVUOTA = "306";
     public static final String STANZENONTROVATE = "310";
     public static final String NOPART = "311";
@@ -89,9 +90,13 @@ public class Controller {
     private static Controller controller = null;
 
     private int codComando;
+    private static Utente u = new Utente("", "");
 
     private static final int SERVERPORT = 5000;
     private static final String SERVER_IP = "localhost";
+
+    public Controller() {
+    }
 
     public static Controller getInstance() {
         if (controller != null)
@@ -163,4 +168,40 @@ public class Controller {
         t.join(); // Attendo la terminazione del thread
         return codComando;
     }
+
+    public int creaStanza(String nome_stanza) throws Exception{
+        String richiesta = CREASTANZA + "|" + nome_stanza + "|" + u.getUsername();
+        System.out.println(richiesta);
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Creazione stanza non riuscita, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
+    public void setUtente(Utente utente) {
+        this.u = utente;
+    }
+
+
 }

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.multichat.controller.Controller;
+import com.example.multichat.model.Utente;
 
 public class RegistrazioneActivity extends AppCompatActivity {
 
@@ -55,6 +56,8 @@ public class RegistrazioneActivity extends AppCompatActivity {
                     }
 
                     if(codComando == Integer.parseInt(controller.REGOK)) {
+                        Utente u = new Utente(username, password);
+                        controller.setUtente(u);
                         builder.setMessage("Registrazione effettuata con successo!")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

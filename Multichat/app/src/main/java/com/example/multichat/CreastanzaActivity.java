@@ -1,5 +1,8 @@
 package com.example.multichat;
 
+import static com.example.multichat.controller.Controller.CREASTANZAERR;
+import static com.example.multichat.controller.Controller.CREASTANZAOK;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,10 +13,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
+import com.example.multichat.controller.Controller;
 
 public class CreastanzaActivity extends AppCompatActivity {
 
+    private int codComando;
     private Button btnC;
+    EditText nomeStanzaEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,20 +32,43 @@ public class CreastanzaActivity extends AppCompatActivity {
         actionBar.setTitle("Crea Stanza");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        nomeStanzaEditText = findViewById(R.id.nomestanza);
+        Controller controller = new Controller();
+
         btnC = (Button) findViewById(R.id.btn_create);
         btnC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(CreastanzaActivity.this);
-                builder.setMessage("Stanza creata con successo!")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                openActivityHome();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                String nome_stanza = nomeStanzaEditText.getText().toString();
+
+                try {
+                    codComando = controller.creaStanza(nome_stanza);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (codComando == Integer.parseInt(CREASTANZAOK)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CreastanzaActivity.this);
+                    builder.setMessage("Stanza creata con successo!")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    openActivityHome();
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else if(codComando == Integer.parseInt(CREASTANZAERR)){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CreastanzaActivity.this);
+                    builder.setMessage("Errore durante la creazione della stanza, riprova.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
     }
