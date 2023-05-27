@@ -1,5 +1,8 @@
 package com.example.multichat;
 
+import static com.example.multichat.controller.Controller.ELIMINAUSERERR;
+import static com.example.multichat.controller.Controller.ELIMINAUSEROK;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.multichat.controller.Controller;
+
 public class ProfiloActivity extends AppCompatActivity {
 
     private AlertDialog.Builder builder;
+    private int codComando;
     private Button btnMystanze;
 
     @Override
@@ -58,12 +64,32 @@ public class ProfiloActivity extends AppCompatActivity {
                         .setCancelable(true)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Context ctx = getApplicationContext();
-                                PackageManager pm = ctx.getPackageManager();
-                                Intent intent = pm.getLaunchIntentForPackage(ctx.getPackageName());
-                                Intent mainIntent = Intent.makeRestartActivityTask(intent.getComponent());
-                                ctx.startActivity(mainIntent);
-                                Runtime.getRuntime().exit(0);
+                                Controller controller = new Controller();
+                                try {
+                                    codComando = controller.eliminaUtente(controller.getUtente().getUsername());
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (codComando == Integer.parseInt(ELIMINAUSEROK)) {
+                                    Context ctx = getApplicationContext();
+                                    PackageManager pm = ctx.getPackageManager();
+                                    Intent intent = pm.getLaunchIntentForPackage(ctx.getPackageName());
+                                    Intent mainIntent = Intent.makeRestartActivityTask(intent.getComponent());
+                                    ctx.startActivity(mainIntent);
+                                    Runtime.getRuntime().exit(0);
+                                }
+                                else if (codComando == Integer.parseInt(ELIMINAUSERERR)){
+                                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProfiloActivity.this);
+                                    builder.setMessage("Errore durante l'eliminazione dell'utente, riprova.")
+                                            .setCancelable(false)
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                }
+                                            });
+                                    android.app.AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
