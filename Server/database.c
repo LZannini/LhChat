@@ -1,28 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <libpq-fe.h>
 #include "database.h"
 
-PGconn* connetti(){
-    PGconn *conn = PQconnectdb("user=postgres dbname=LhChat");
+PGconn* connetti(char *conn_string){
+    PGconn *conn = PQconnectdb(conn_string);
 
     if (PQstatus(conn) == CONNECTION_BAD) {
 
         fprintf(stderr, "Connessione al database fallita: %s\n",
             PQerrorMessage(conn));
-        do_exit(conn);
+        disconnetti(conn);
+        return NULL;
     }
 
-    PQfinish(conn);
+    return conn;
 }
 
 void disconnetti(PGconn *conn) {
     PQfinish(conn);
-    exit(1);
+    printf("Server: db disconnesso\n");
 }
 
 PGresult *select_stanze_utente(char *username){
-    PGconn *miaconn = PQconnectdb(CONN_STRING);;
+    PGconn *conn = connetti(CONN_STRING);;
     PGresult *res;
     char query[1024], error[1024];
 
@@ -46,12 +48,12 @@ PGresult *select_stanze_utente(char *username){
 }
 
 PGresult *select_messaggi_stanza(int id_stanza){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
 
     if (conn != NULL){
-        sprintf(query, "select * from messaggio where id_stanza = $$%d$$ ORDER BY ora_invio", id_stanza);
+        sprintf(query, "select mittente, ora_invio, testo from messaggio where id_stanza = $$%d$$ ORDER BY ora_invio", id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
@@ -68,8 +70,54 @@ PGresult *select_messaggi_stanza(int id_stanza){
     return res;
 }
 
+PGresult *select_richieste_stanza(int id_stanza){
+    PGconn *conn = connetti(CONN_STRING);
+    PGresult *res;
+    char query[1024], error[1024];
+    
+    if (conn != NULL){
+        sprintf(query, "select utente from richiesta_stanza where id_stanza = $$%d$$", id_stanza);
+        res = PQexec(conn, query);
+        strcpy(error, PQresultErrorMessage(res));
+        if (strlen(error) > 0){
+            printf("%s\n", error);
+            printf("DB: Errore sulla ricerca di richieste per la stanza");
+            PQclear(res);
+            res = NULL;
+        }
+    }
+    else
+        printf("DB: Errore! Connessione al database fallita.\n");
+        
+    disconnetti(conn);
+    return res;
+}
+
+PGresult *select_partecipanti(int id_stanza){
+    PGconn *conn = connetti(CONN_STRING);
+    PGresult *res;
+    char query[1024], error[1024];
+    
+    if (conn != NULL){
+        sprintf(query, "select username from appartenenza_stanza where id_stanza = $$%d$$", id_stanza);
+        res = PQexec(conn, query);
+        strcpy(error, PQresultErrorMessage(res));
+        if (strlen(error) > 0){
+            printf("%s\n", error);
+            printf("DB: Errore sulla ricerca di richieste per la stanza");
+            PQclear(res);
+            res = NULL;
+        }
+    }
+    else
+        printf("DB: Errore! Connessione al database fallita.\n");
+        
+    disconnetti(conn);
+    return res;
+}
+
 int insert_utente(char *username, char *password){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
@@ -84,9 +132,9 @@ int insert_utente(char *username, char *password){
         }
         else{
             printf("DB: Utente inserito con successo.\n");
-            flag = 1;
+            out = 1;
         }
-        PQclear(query);
+        PQclear(res);
     }
     else
         printf("DB: Errore! Connessione al database fallita. \n");
@@ -96,7 +144,7 @@ int insert_utente(char *username, char *password){
 }
 
 int insert_stanza(int id_stanza, char *nome_stanza, char *nome_admin){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
@@ -110,7 +158,7 @@ int insert_stanza(int id_stanza, char *nome_stanza, char *nome_admin){
             printf("DB: Errore nell'inserimento della stanza. \n");
         }
         else{
-            printf("DB: Stanza aggiunta con successo.")
+            printf("DB: Stanza aggiunta con successo.");
             out = 1;
         }
         PQclear(res);
@@ -123,13 +171,13 @@ int insert_stanza(int id_stanza, char *nome_stanza, char *nome_admin){
 }
 
 int insert_appartenenza_stanza(char *username, int id_stanza){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "insert into appartenenza_stanza(username, id_stanza) values ($$%d$$, $$%d$$)", username, id_stanza);
+        sprintf(query, "insert into appartenenza_stanza(username, id_stanza) values ($$%s$$, $$%d$$)", username, id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
@@ -137,7 +185,7 @@ int insert_appartenenza_stanza(char *username, int id_stanza){
             printf("DB: Errore nell'inserimento dell'utente nella stanza. \n");
         }
         else{
-            printf("DB: Utente aggiunto alla stanza con successo.")
+            printf("DB: Utente aggiunto alla stanza con successo.");
             out = 1;
         }
         PQclear(res);
@@ -149,8 +197,36 @@ int insert_appartenenza_stanza(char *username, int id_stanza){
     return out;
 }
 
+int insert_richiesta_stanza(char *username, int id_stanza){
+    PGconn *conn = connetti(CONN_STRING);
+    PGresult *res;
+    char query[1024], error[1024];
+    int out = 0;
+
+    if (conn != NULL){
+        sprintf(query, "insert into richiesta_stanza(utente, id_stanza) values ($$%s$$, $$%d$$)", username, id_stanza);
+        res = PQexec(conn, query);
+        strcpy(error, PQresultErrorMessage(res));
+        if (strlen(error) > 0){
+            printf("%s\n", error);
+            printf("DB: Errore nella richiesta dell'utente nella stanza. \n");
+        }
+        else{
+            printf("DB: Richiesta effettuata con successo.");
+            out = 1;
+        }
+        PQclear(res);
+    }
+    else
+        printf("DB: Errore! Connessione al database fallita.\n");
+
+    disconnetti(conn);
+    return out;
+}
+
+
 int delete_stanza(int id_stanza){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
@@ -167,7 +243,7 @@ int delete_stanza(int id_stanza){
             printf("DB: Stanza eliminata con successo.\n");
             out = 1;
         }
-        PQclear(query);
+        PQclear(res);
     }
     else
         printf("DB: Errore! Connessione al database fallita.\n");
@@ -177,7 +253,7 @@ int delete_stanza(int id_stanza){
 }
 
 int delete_utente(char *username){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
@@ -194,7 +270,7 @@ int delete_utente(char *username){
             printf("DB: Utente eliminato con successo.\n");
             out = 1;
         }
-        PQclear(query);
+        PQclear(res);
     }
     else
         printf("DB: Errore! Connessione al database fallita.\n");
@@ -203,14 +279,14 @@ int delete_utente(char *username){
     return out;
 }
 
-int insert_messaggio(char *mittente, int id_stanza, char *ora_invio, char *testo){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+int insert_messaggio(char *mittente, int id_stanza, time_t ora_invio, char *testo){
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s%%, $$%d$$, $$%s%%, $$%d$$)", mittente, id_stanza, ora_invio, testo);
+        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s%%, $$%d$$, $$%ld%%, $$%s$$)", mittente, id_stanza, ora_invio, testo);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
@@ -218,7 +294,7 @@ int insert_messaggio(char *mittente, int id_stanza, char *ora_invio, char *testo
             printf("DB: Errore nell'inserimento del messaggio. \n");
         }
         else{
-            printf("DB: Messaggio aggiunto con successo.")
+            printf("DB: Messaggio aggiunto con successo.");
             out = 1;
         }
         PQclear(res);
@@ -231,7 +307,7 @@ int insert_messaggio(char *mittente, int id_stanza, char *ora_invio, char *testo
 }
 
 int delete_appartenenza_stanza(char *username, int id_stanza){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
@@ -248,7 +324,7 @@ int delete_appartenenza_stanza(char *username, int id_stanza){
             printf("DB: Utente eliminato dalla stanza con successo.\n");
             out = 1;
         }
-        PQclear(query);
+        PQclear(res);
     }
     else
         printf("DB: Errore! Connessione al database fallita.\n");
@@ -257,13 +333,68 @@ int delete_appartenenza_stanza(char *username, int id_stanza){
     return out;
 }
 
+int update_password(char *username, char *nuova_pass){
+  PGconn *conn = connetti(CONN_STRING);
+  PGresult *res;
+  char query[1024], error[1024];
+  int out = 0;
+  
+  if (conn != NULL){
+    sprintf(query, "update utente set password = $$%s$$ where username = $$%s$$", nuova_pass, username);
+    res = PQexec(conn, query);
+    strcpy(error, PQresultErrorMessage(res));
+    if(strlen(error) > 0){
+      printf("%s\n", error);
+      printf("DB: Errore nella modifica della password dell'utente. \n");
+    }
+    else{
+      printf("DB: Password dell'utente aggiornata con successo.\n");
+      out = 1;
+    }
+    PQclear(res);
+  }
+  else
+    printf("DB: Errore! Connessione al database fallita.\n");
+
+  disconnetti(conn);
+  return out;
+}
+
+int update_username(char *username, char *nuovo_user){
+  PGconn *conn = connetti(CONN_STRING);
+  PGresult *res;
+  char query[1024], error[1024];
+  int out = 0;
+  
+  if (conn != NULL){
+    sprintf(query, "update utente set username = $$%s$$ where username = $$%s$$", nuovo_user, username);
+    res = PQexec(conn, query);
+    strcpy(error, PQresultErrorMessage(res));
+    if(strlen(error) > 0){
+      printf("%s\n", error);
+      printf("DB: Errore nella modifica della password dell'utente. \n");
+    }
+    else{
+      printf("DB: Password dell'utente aggiornata con successo.\n");
+      out = 1;
+    }
+    PQclear(res);
+  }
+  else
+    printf("DB: Errore! Connessione al database fallita.\n");
+
+  disconnetti(conn);
+  return out;
+}
+
 int check_if_registrato(char *username, char *password){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024];
     int val;
 
     if(conn != NULL){
+        printf("Server: connessione con il db effettuata con successo\n");
         sprintf(query, "select * from utente WHERE username = $$%s$$ AND password = $$%s$$", username, password);
         res = PQexec(conn, query);
 
@@ -273,22 +404,44 @@ int check_if_registrato(char *username, char *password){
             val = 0;
         }else{
             val = 2; //perchè c'è stato un errore
+            printf("DB: Errore! Connessione al database fallita. \n");
+        }
     }
-    else
-        printf("DB: Errore! Connessione al database fallita. \n");
-
 
     disconnetti(conn);
     return val;
 }
 
-PGresult *check_if_stanza_esisite(char *nome_stanza){
-    PGconn *conn = PQconnectdb(CONN_STRING);
+PGresult *check_if_admin(char *username, int id_stanza){
+    PGconn *conn = connetti(CONN_STRING);
+    PGresult *res;
+    char query[1024], error[1024];
+    
+    if(conn != NULL){
+        sprintf(query, "select * from stanza where nome_admin = $$%s$$ AND id_stanza = $$%d$$", username, id_stanza);
+        res = PQexec(conn, query);
+        strcpy(error, PQresultErrorMessage(res));
+        if(strlen(error) > 0){
+            printf("%s\n", error);
+            printf("DB: Errore nella ricerca dell'admin. \n");
+            PQclear(res);
+            res = NULL;
+        }
+    }
+    else    
+        printf("DB: Errore! Connessione al database fallita. \n");
+        
+    disconnetti(conn);
+}
+    
+
+PGresult *check_if_stanza_esiste(char *nome_stanza){
+    PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
 
     if(conn != NULL){
-        sprintf(query, "select * from stanza WHERE nome_stanza LIKE $$%%s%$", nome_stanza);
+        sprintf(query, "select * from stanza WHERE nome_stanza LIKE $$%s$$", nome_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
@@ -304,7 +457,6 @@ PGresult *check_if_stanza_esisite(char *nome_stanza){
     disconnetti(conn);
     return res;
 }
-
 
 
 
