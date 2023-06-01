@@ -7,6 +7,17 @@
     android:background="@drawable/icon_background"
     tools:context=".ProfiloActivity">
 
+    <TextView
+        android:id="@+id/tv_password"
+        android:layout_width="141dp"
+        android:layout_height="21dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="346dp" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="114dp"
@@ -49,7 +60,7 @@
     <Button
         android:id="@+id/btn_mystanze"
         android:layout_width="112dp"
-        android:layout_height="41dp"
+        android:layout_height="48dp"
         android:layout_gravity="start"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="64dp"
@@ -68,4 +79,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         app:layout_constraintVertical_bias="0.105"
         tools:text="Le mie Stanze" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="141dp"
+        android:layout_height="21dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="278dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

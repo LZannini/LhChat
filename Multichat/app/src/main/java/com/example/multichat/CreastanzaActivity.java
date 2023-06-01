@@ -21,7 +21,7 @@ public class CreastanzaActivity extends AppCompatActivity {
 
     private int codComando;
     private Button btnC;
-    EditText nomeStanzaEditText;
+    private EditText nomeStanzaEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,7 @@ public class CreastanzaActivity extends AppCompatActivity {
                     builder.setMessage("Errore durante la creazione della stanza, riprova.")
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
+                                public void onClick(DialogInterface dialog, int id) { }
                             });
                     AlertDialog alert = builder.create();
                     alert.show();

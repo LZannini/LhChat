@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.multichat.controller.Controller;
 
@@ -34,6 +35,12 @@ public class ProfiloActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Il mio Profilo");
         actionBar.setDisplayHomeAsUpEnabled(true);
+        Controller controller = new Controller();
+
+        TextView textViewUsername = (TextView) findViewById(R.id.tv_username);
+        TextView textViewPassword = (TextView) findViewById(R.id.tv_password);
+        textViewUsername.setText(controller.getUtente().getUsername());
+        textViewPassword.setText(controller.getUtente().getPassword());
 
         btnMystanze = (Button) findViewById(R.id.btn_mystanze);
         btnMystanze.setOnClickListener(new View.OnClickListener() {
