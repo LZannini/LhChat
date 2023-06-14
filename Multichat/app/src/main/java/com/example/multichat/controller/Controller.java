@@ -10,12 +10,16 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.multichat.model.Stanza;
 import com.example.multichat.model.Utente;
 
 public class Controller {
@@ -90,10 +94,12 @@ public class Controller {
     private static Controller controller = null;
 
     private int codComando;
+    private ArrayList<Stanza> lista_stanze;
+    private String[] dati;
     private static Utente u = new Utente("", "");
 
     private static final int SERVERPORT = 5000;
-    private static final String SERVER_IP = "192.168.1.172";
+    private static final String SERVER_IP = "192.168.178.24";
 
     public Controller() {
     }
@@ -284,6 +290,34 @@ public class Controller {
         t.start(); // Avvio del thread
         t.join(); // Attendo la terminazione del thread
         return codComando;
+    }
+
+    public String[] vediStanze() throws Exception {
+        String richiesta = VEDISTANZE + "|" + u.getUsername();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    dati = risposta.split("\\|");
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return dati;
     }
 
     public void setUtente(Utente utente) {

@@ -1,7 +1,13 @@
 package com.example.multichat;
 
+import static com.example.multichat.controller.Controller.STANZENONTROVATE;
+import static com.example.multichat.controller.Controller.VEDISTANZEERR;
+import static com.example.multichat.controller.Controller.VEDISTANZEOK;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,14 +18,67 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.multichat.adapters.RecyclerViewAdapter;
+import com.example.multichat.controller.Controller;
+import com.example.multichat.model.Stanza;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity {
 
     private AlertDialog.Builder builder;
+    private String[] risposta;
+    private ArrayList<Stanza> lista_stanze = new ArrayList<Stanza>();
+    RecyclerView recyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        recyclerView = findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+        Controller controller = new Controller();
+        try {
+            risposta = controller.vediStanze();
+            int codComando = Integer.parseInt(risposta[0]);
+
+            if(codComando == Integer.parseInt(VEDISTANZEOK)) {
+                for(int i = 1; i < risposta.length; i++) {
+                    String[] dati_stanze = risposta[i].split("\\,");
+                    Stanza stanza = new Stanza(Integer.parseInt(dati_stanze[0]), dati_stanze[1], dati_stanze[2]);
+                    lista_stanze.add(stanza);
+                }
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(lista_stanze);
+                System.out.println(adapter.getItemCount());
+                recyclerView.setAdapter(adapter);
+            } else if(codComando == Integer.parseInt(VEDISTANZEERR)) {
+                builder.setMessage("Errore durante il caricamento delle stanze!")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            } else if(codComando == Integer.parseInt(STANZENONTROVATE)) {
+                builder.setMessage("Non sei ancora entrato in nessuna stanza!")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -117,4 +176,11 @@ public class HomeActivity extends AppCompatActivity {
                 .show();
         return;
     }
+
+    /*@Override
+    public void onStanzaClick(int position) {
+        lista_stanze.get(position);
+        Intent intent = new Intent(this, NewActivity.class);
+        startActivity(intent);
+    }*/
 }
