@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.multichat.adapters.RecyclerViewAdapter;
 import com.example.multichat.controller.Controller;
@@ -25,7 +27,7 @@ import com.example.multichat.model.Stanza;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements RecyclerViewAdapter.OnStanzaListener {
 
     private AlertDialog.Builder builder;
     private String[] risposta;
@@ -38,6 +40,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         recyclerView = findViewById(R.id.recyclerView);
+        TextView errorTextView = findViewById(R.id.errorTextView);
+        TextView nessunaStanzaTextView = findViewById(R.id.nessunaStanzaTextView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -46,34 +50,21 @@ public class HomeActivity extends AppCompatActivity {
         try {
             risposta = controller.vediStanze();
             int codComando = Integer.parseInt(risposta[0]);
-
+System.out.println(risposta[1]);
             if(codComando == Integer.parseInt(VEDISTANZEOK)) {
                 for(int i = 1; i < risposta.length; i++) {
                     String[] dati_stanze = risposta[i].split("\\,");
                     Stanza stanza = new Stanza(Integer.parseInt(dati_stanze[0]), dati_stanze[1], dati_stanze[2]);
                     lista_stanze.add(stanza);
                 }
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(lista_stanze);
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(lista_stanze, this);
                 System.out.println(adapter.getItemCount());
                 recyclerView.setAdapter(adapter);
             } else if(codComando == Integer.parseInt(VEDISTANZEERR)) {
-                builder.setMessage("Errore durante il caricamento delle stanze!")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                errorTextView.setText("Errore durante il caricamento delle stanze!");
+                errorTextView.setVisibility(View.VISIBLE);
             } else if(codComando == Integer.parseInt(STANZENONTROVATE)) {
-                builder.setMessage("Non sei ancora entrato in nessuna stanza!")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                nessunaStanzaTextView.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -177,10 +168,11 @@ public class HomeActivity extends AppCompatActivity {
         return;
     }
 
-    /*@Override
+    @Override
     public void onStanzaClick(int position) {
         lista_stanze.get(position);
-        Intent intent = new Intent(this, NewActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
-    }*/
+    }
+
 }

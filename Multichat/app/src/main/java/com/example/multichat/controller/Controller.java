@@ -95,7 +95,7 @@ public class Controller {
 
     private int codComando;
     private ArrayList<Stanza> lista_stanze;
-    private String[] dati;
+    String[] dati = new String[0];
     private static Utente u = new Utente("", "");
 
     private static final int SERVERPORT = 5000;
@@ -294,6 +294,34 @@ public class Controller {
 
     public String[] vediStanze() throws Exception {
         String richiesta = VEDISTANZE + "|" + u.getUsername();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    dati = risposta.split("\\|");
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return dati;
+    }
+
+    public String[] apriChat() throws Exception {
+        String richiesta = APRICHAT + "|" + u.getUsername();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

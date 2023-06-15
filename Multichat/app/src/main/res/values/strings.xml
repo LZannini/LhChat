@@ -10,4 +10,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="message_no_rooms">Non sei ancora entrato in nessuna stanza, registrati e inizia a chattare!</string>
+    <string name="message_error_rooms">Si è verificato un errore durante il caricamento delle stanze.</string>
 </resources>

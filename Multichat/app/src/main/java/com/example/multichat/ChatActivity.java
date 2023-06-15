@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 
@@ -34,10 +35,19 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        messageListView = findViewById(R.id.list_view_messages);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Chat");
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("roomId")) {
+            int roomId = intent.getIntExtra("roomId", -1);
+
+        }
 
         messages = new ArrayList<>();
         messageEditText = findViewById(R.id.edit_text_message);
