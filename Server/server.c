@@ -22,6 +22,7 @@ void *gestisci(void *arg){
   char buffer[2000];
   char risposta[2000];
   
+
   while ((read_size = recv(sock, buffer, 2000, 0)) > 0) {
   if (read_size < 0) {
     perror("Server: errore durante la lettura dei dati dal socket");
@@ -30,8 +31,9 @@ void *gestisci(void *arg){
     printf("Server: richiesta ricevuta con successo!\n", buffer);
   }
   
+  printf("RIGA34_SERVER----------%s\n", buffer);
   gestisci_richiesta_client(buffer, &risposta);
-  //printf("Server: la risposta da inviare è: %s\n", risposta);
+  printf("\n\nRIGA36_SERVER----------Server: la richiesta in uscita è: %s\n\n", buffer);
   if (risposta != NULL) {
     send(sock, risposta, strlen(risposta), 0);
   } else {
@@ -39,7 +41,6 @@ void *gestisci(void *arg){
   }
 }
 
-  
   close(*(int *) arg);
   pthread_exit(0);
 }
@@ -50,6 +51,7 @@ int main(){
   struct sockaddr_in sin, client;
   char mess[256];
   pthread_t tid;
+
   
   //crea socket
   s_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -82,10 +84,11 @@ int main(){
   }else{
     printf("Server: in ascolto!\n");
   }
-  
+  int i=0;
   
   //accetta una nuova connessione
   while(1){
+
     c_fd = accept(s_fd, (struct sockaddr *) &client, &len);
     if (c_fd < 0) {
       perror("Errore durante l'accettazione della connessione");
@@ -99,7 +102,7 @@ int main(){
     err = pthread_create(&tid, NULL, gestisci, (void *) &c_fd);
     if(err != 0){
       printf("Impossibile creare il Thread, %s\n", strerror(err));
-    pthread_detach(tid);
+      pthread_detach(tid);
     }
   }
   

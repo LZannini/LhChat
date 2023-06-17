@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity implements RecyclerViewAdapt
         try {
             risposta = controller.vediStanze();
             int codComando = Integer.parseInt(risposta[0]);
-System.out.println(risposta[1]);
+
             if(codComando == Integer.parseInt(VEDISTANZEOK)) {
                 for(int i = 1; i < risposta.length; i++) {
                     String[] dati_stanze = risposta[i].split("\\,");
@@ -172,6 +172,8 @@ System.out.println(risposta[1]);
     public void onStanzaClick(int position) {
         lista_stanze.get(position);
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("nome_stanza", lista_stanze.get(position).getNome_stanza());
+        intent.putExtra("room_id", lista_stanze.get(position).getId_stanza());
         startActivity(intent);
     }
 

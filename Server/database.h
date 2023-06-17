@@ -11,7 +11,7 @@ PGresult *select_messaggi_stanza(int id_stanza);
 PGresult *select_richieste_stanza(int id_stanza);
 PGresult *select_partecipanti(int id_stanza);
 int insert_utente(char *username, char *password);
-int insert_stanza(int id_stanza, char *nome_stanza, char *nome_admin);
+int insert_stanza(char *nome_stanza, char *nome_admin);
 int insert_appartenenza_stanza(char *username, int id_stanza);
 int insert_richiesta_stanza(char *username, int id_stanza);
 int insert_messaggio(char *mittente, int id_stanza, time_t ora_invio, char *testo);

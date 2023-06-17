@@ -56,18 +56,14 @@ void richiesta_registrazione(char *richiesta, char *risposta){
 void richiesta_new_stanza(char *richiesta, char *risposta){
   int inserito = 0;
   
-  int id_stanza;
-  char *id_stanza_str;
   char *nome_stanza;
   char *nome_admin;
   
-  id_stanza_str = strtok(richiesta, "|");
-  id_stanza = atoi(id_stanza_str);
   
-  nome_stanza = strtok(NULL, "|");
+  nome_stanza = strtok(richiesta, "|");
   nome_admin = strtok(NULL, "|");
   
-  inserito = insert_stanza(id_stanza, nome_stanza, nome_admin);
+  inserito = insert_stanza(nome_stanza, nome_admin);
   if(inserito == 0){
     produci_risposta_new_stanza(CREASTANZAERR, risposta);
   }else{
@@ -89,6 +85,7 @@ void richiesta_vedi_stanze(char *richiesta, char *risposta){
     produci_risposta_mie_stanze(STANZENONTROVATE, stanze_trovate, risposta);
   }else{
     produci_risposta_mie_stanze(VEDISTANZEOK, stanze_trovate, risposta);
+    printf("\n\n%s\n\n", risposta);
   }
 }
 
@@ -105,6 +102,7 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta){
   struct tm tm_orario;
   int id_stanza;
   
+  printf("RIGA 105_CONTROLLER--------%s\n", richiesta);
   mittente = strtok(richiesta, "|");
   id_stanza_str = strtok(NULL, "|");
   orario = strtok(NULL, "|");

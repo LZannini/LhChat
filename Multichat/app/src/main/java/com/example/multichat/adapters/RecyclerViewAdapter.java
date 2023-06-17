@@ -25,9 +25,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.onStanzaListener = onStanzaListener;
     }
 
-    public RecyclerViewAdapter(ArrayList<Stanza> lista_stanze) {
+   /* public RecyclerViewAdapter(ArrayList<Stanza> lista_stanze) {
         this.stanze = lista_stanze;
-    }
+    }*/
 
     @NonNull
     @Override

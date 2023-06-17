@@ -41,10 +41,11 @@ void produci_risposta_mie_stanze(const int comando, PGresult *res, char *rispost
     char *id_str;
     char *tuple = malloc(sizeof(char) *1000);
       
+    tuple[0] = '\0';  
     for(i=0; i<righe; i++){
       id_str = PQgetvalue(res, i, 0);
       id = atoi(id_str);
-      sprintf(tuple + strlen(tuple), "|%d,%s", id, PQgetvalue(res, i, 1));
+      sprintf(tuple + strlen(tuple), "|%d,%s,%s", id, PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
     }
       
     sprintf(risposta, "%d%s", comando, tuple);
@@ -80,14 +81,18 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
     time_t orario;
     struct tm tm_orario;
     char *tuple = malloc(sizeof(char) *1000);
+    char orario_formattato[20];
     
+    tuple[0] = '\0';  
     for(i=0; i<righe; i++){
       orario_str = PQgetvalue(res, i, 1);
       memset(&tm_orario, 0, sizeof(struct tm));
       strptime(orario_str, "%Y-%m-%d %H:%M:%S", &tm_orario);
       orario = mktime(&tm_orario);
-      sprintf(tuple + strlen(tuple), "|%s,%ld,%s", PQgetvalue(res, i, 0), orario, PQgetvalue(res, i, 2));
+      strftime(orario_formattato, sizeof(orario_formattato), "%Y-%m-%d %H:%M:%S", localtime(&orario));
+      sprintf(tuple + strlen(tuple), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
     }
+    printf("RIGA93_GESRIC---------%s", orario_formattato);
     
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);

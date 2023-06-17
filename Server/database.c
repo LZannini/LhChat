@@ -30,7 +30,7 @@ PGresult *select_stanze_utente(char *username){
 
     if(conn != NULL)
     {
-        sprintf(query, "select s.id_stanza, s.nome_stanza from stanza s join appartenenza_stanza a on s.id_stanza=a.id_stanza where a.username = $$%s$$", username);
+        sprintf(query, "select s.id_stanza, s.nome_stanza, s.nome_admin from stanza s join appartenenza_stanza a on s.id_stanza=a.id_stanza where a.username = $$%s$$", username);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
@@ -143,14 +143,14 @@ int insert_utente(char *username, char *password){
     return out;
 }
 
-int insert_stanza(int id_stanza, char *nome_stanza, char *nome_admin){
+int insert_stanza(char *nome_stanza, char *nome_admin){
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "insert into stanza(id_stanza, nome_stanza, nome_admin) values ($$%d$$, $$%s$$, $$%s$$)", id_stanza, nome_stanza, nome_admin);
+        sprintf(query, "insert into stanza(nome_stanza, nome_admin) values ($$%s$$, $$%s$$)", nome_stanza, nome_admin);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){

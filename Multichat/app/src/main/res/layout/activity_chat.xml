@@ -3,19 +3,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/icon_background_white"
     android:padding="16dp">
-
-    <ListView
-        android:id="@+id/list_view_messages"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/layout_input"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        android:paddingBottom="8dp" />
 
     <LinearLayout
         android:id="@+id/layout_input"
@@ -43,6 +35,25 @@
             android:text="Invia"
             app:backgroundTint="#FF5722" />
 
+        <TextView
+            android:id="@+id/msg_errorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_error_chat"
+            android:textColor="@color/white"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+
+
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/message_recyclerView"
+        android:layout_width="395dp"
+        android:layout_height="612dp"
+        android:layout_above="@+id/layout_input"
+        android:layout_marginBottom="13dp" />
+
 
 </RelativeLayout>
