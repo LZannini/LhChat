@@ -35,7 +35,7 @@ CREATE TABLE messaggio
 (
     mittente character varying(32) COLLATE pg_catalog."default" NOT NULL,
     id_stanza integer NOT NULL DEFAULT nextval('messaggio_id_stanza_seq'::regclass),
-    ora_invio date NOT NULL,
+    ora_invio timestamp NOT NULL,
     testo text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT messaggio_id_stanza_fkey FOREIGN KEY (id_stanza)
         REFERENCES public.stanza (id_stanza) MATCH SIMPLE

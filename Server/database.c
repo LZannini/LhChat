@@ -20,7 +20,7 @@ PGconn* connetti(char *conn_string){
 
 void disconnetti(PGconn *conn) {
     PQfinish(conn);
-    printf("Server: db disconnesso\n");
+    printf("Server: db disconnesso\n\n");
 }
 
 PGresult *select_stanze_utente(char *username){
@@ -286,7 +286,7 @@ int insert_messaggio(char *mittente, int id_stanza, time_t ora_invio, char *test
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s%%, $$%d$$, $$%ld%%, $$%s$$)", mittente, id_stanza, ora_invio, testo);
+        sprintf(query, "insert into messaggio(mittente, id_stanza, ora_invio, testo) values ($$%s$$, $$%d$$, to_timestamp($$%ld$$), $$%s$$)", mittente, id_stanza, ora_invio, testo);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){

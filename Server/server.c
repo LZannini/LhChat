@@ -33,7 +33,7 @@ void *gestisci(void *arg){
   
   printf("RIGA34_SERVER----------%s\n", buffer);
   gestisci_richiesta_client(buffer, &risposta);
-  printf("\n\nRIGA36_SERVER----------Server: la richiesta in uscita è: %s\n\n", buffer);
+  //printf("\n\nRIGA36_SERVER----------Server: la richiesta in uscita è: %s\n\n", risposta);
   if (risposta != NULL) {
     send(sock, risposta, strlen(risposta), 0);
   } else {

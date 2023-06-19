@@ -8,6 +8,7 @@ public class Messaggio {
     private int id_stanza;
     private Date ora_invio;
     private String testo;
+    private Boolean inviato;
 
     public Messaggio(String mittente, int id_stanza, Date ora_invio, String testo) {
         setMittente(mittente);
@@ -46,5 +47,13 @@ public class Messaggio {
 
     public void setTesto(String testo) {
         this.testo = testo;
+    }
+
+    public Boolean isInviato() {
+        return inviato;
+    }
+
+    public void setInviato(boolean inviato) {
+        this.inviato = inviato;
     }
 }

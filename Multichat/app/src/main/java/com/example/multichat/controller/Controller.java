@@ -348,7 +348,7 @@ public class Controller {
         return dati;
     }
 
-    public int inviaMessaggio(String testo, long orario, int id_stanza) throws Exception {
+    public int inviaMessaggio(String testo, String orario, int id_stanza) throws Exception {
         String richiesta = INVIAMESS + "|" + u.getUsername() + "|" + id_stanza + "|" + orario + "|" + testo;
         Thread t = new Thread(new Runnable() {
             @Override

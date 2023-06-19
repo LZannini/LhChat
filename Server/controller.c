@@ -85,7 +85,6 @@ void richiesta_vedi_stanze(char *richiesta, char *risposta){
     produci_risposta_mie_stanze(STANZENONTROVATE, stanze_trovate, risposta);
   }else{
     produci_risposta_mie_stanze(VEDISTANZEOK, stanze_trovate, risposta);
-    printf("\n\n%s\n\n", risposta);
   }
 }
 
@@ -359,7 +358,6 @@ void gestisci_richiesta_client(char *richiesta, char *risposta){
   comando = strtok(richiesta, "|");
   resto_richiesta = strtok(NULL, "");
   cod_comando = atoi(comando);
-  printf("Il comando da analizzare è: %d\n", cod_comando);
 
   
   if(cod_comando == LOGIN){

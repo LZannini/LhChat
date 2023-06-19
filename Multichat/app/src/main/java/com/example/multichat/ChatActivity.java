@@ -25,7 +25,9 @@ import com.example.multichat.controller.Controller;
 import com.example.multichat.model.Messaggio;
 import com.example.multichat.model.Stanza;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -44,6 +46,7 @@ public class ChatActivity extends AppCompatActivity {
         messageRecyclerView = findViewById(R.id.message_recyclerView);
         TextView errorTextView = findViewById(R.id.msg_errorTextView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         messageRecyclerView.setLayoutManager(layoutManager);
 
         Intent intent = getIntent();
@@ -56,8 +59,8 @@ public class ChatActivity extends AppCompatActivity {
 
         if (intent != null && intent.hasExtra("room_id")) {
             int roomId = intent.getIntExtra("room_id", -1);
-            long oraAttuale = System.currentTimeMillis();
-            long oraInSecondi = oraAttuale/1000;
+
+
 
             messages = new ArrayList<>();
             messageEditText = findViewById(R.id.edit_text_message);
@@ -68,11 +71,20 @@ public class ChatActivity extends AppCompatActivity {
                 codComando = Integer.parseInt(risposta[0]);
 
                 if(codComando == Integer.parseInt(APRICHATOK)) {
+                    String formatoData = "yyyy-MM-dd HH:mm:ss";
+                    SimpleDateFormat sdf = new SimpleDateFormat(formatoData);
                     for (int i = 1; i < risposta.length; i++) {
                         String[] dati_messaggi = risposta[i].split("\\,");
-                        Messaggio messaggio = new Messaggio(dati_messaggi[0], roomId, null, dati_messaggi[2]);
+                        Date orario = sdf.parse(dati_messaggi[1]);
+                        Messaggio messaggio = new Messaggio(dati_messaggi[0], roomId, orario, dati_messaggi[2]);
+                        if(messaggio.getMittente().equals(controller.getUtente().getUsername())) {
+                            messaggio.setInviato(true);
+                        } else {
+                            messaggio.setInviato(false);
+                        }
                         messages.add(messaggio);
                     }
+                    messageRecyclerView.scrollToPosition(messages.size() - 1);
                     messageAdapter = new MessageAdapter(messages);
                     messageRecyclerView.setAdapter(messageAdapter);
                 } else if(codComando == Integer.parseInt(APRICHATERR)){
@@ -87,9 +99,14 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String testo_messaggio = messageEditText.getText().toString().trim();
+                    long oraAttuale = System.currentTimeMillis();
+                    Date data_messaggio = new Date(oraAttuale);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String data_formattata = sdf.format(data_messaggio);
+
                     if (!testo_messaggio.isEmpty()) {
                         try {
-                            codComando = controller.inviaMessaggio(testo_messaggio, oraInSecondi, roomId);
+                            codComando = controller.inviaMessaggio(testo_messaggio, data_formattata, roomId);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }

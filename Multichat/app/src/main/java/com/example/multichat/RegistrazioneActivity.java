@@ -55,7 +55,7 @@ public class RegistrazioneActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
 
-                    //if(codComando == Integer.parseInt(controller.REGOK)) {
+                    if(codComando == Integer.parseInt(controller.REGOK)) {
                         Utente u = new Utente(username, password);
                         controller.setUtente(u);
                         builder.setMessage("Registrazione effettuata con successo!")
@@ -67,7 +67,7 @@ public class RegistrazioneActivity extends AppCompatActivity {
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-                    /*}else if(codComando == Integer.parseInt(controller.REGERR)) {
+                    }else if(codComando == Integer.parseInt(controller.REGERR)) {
                         builder.setMessage("Errore durante la fase di registrazione!")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -86,7 +86,7 @@ public class RegistrazioneActivity extends AppCompatActivity {
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-                    }*/
+                    }
                 } else {
                     builder.setMessage("Le password non corrispondono, riprova")
                             .setCancelable(false)

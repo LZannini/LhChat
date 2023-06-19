@@ -92,7 +92,7 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
       strftime(orario_formattato, sizeof(orario_formattato), "%Y-%m-%d %H:%M:%S", localtime(&orario));
       sprintf(tuple + strlen(tuple), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
     }
-    printf("RIGA93_GESRIC---------%s", orario_formattato);
+    //printf("RIGA93_GESRIC---------%s", tuple);
     
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);

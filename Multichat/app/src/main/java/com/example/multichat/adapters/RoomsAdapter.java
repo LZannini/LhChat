@@ -1,6 +1,5 @@
 package com.example.multichat.adapters;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.multichat.ChatActivity;
 import com.example.multichat.R;
 import com.example.multichat.model.Stanza;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> {
     private ArrayList<Stanza> stanze = new ArrayList<>();
     private OnStanzaListener onStanzaListener;
 
-    public RecyclerViewAdapter(ArrayList<Stanza> stanze, RecyclerViewAdapter.OnStanzaListener onStanzaListener){
+    public RoomsAdapter(ArrayList<Stanza> stanze, RoomsAdapter.OnStanzaListener onStanzaListener){
         this.stanze = stanze;
         this.onStanzaListener = onStanzaListener;
     }
@@ -37,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RoomsAdapter.ViewHolder holder, int position) {
         Stanza item = stanze.get(position);
         holder.textView.setText(item.getNome_stanza());
     }

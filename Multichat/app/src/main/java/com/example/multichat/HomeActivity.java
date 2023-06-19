@@ -20,14 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.multichat.adapters.RecyclerViewAdapter;
+import com.example.multichat.adapters.RoomsAdapter;
 import com.example.multichat.controller.Controller;
 import com.example.multichat.model.Stanza;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements RecyclerViewAdapter.OnStanzaListener {
+public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnStanzaListener {
 
     private AlertDialog.Builder builder;
     private String[] risposta;
@@ -57,7 +56,7 @@ public class HomeActivity extends AppCompatActivity implements RecyclerViewAdapt
                     Stanza stanza = new Stanza(Integer.parseInt(dati_stanze[0]), dati_stanze[1], dati_stanze[2]);
                     lista_stanze.add(stanza);
                 }
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(lista_stanze, this);
+                RoomsAdapter adapter = new RoomsAdapter(lista_stanze, this);
                 System.out.println(adapter.getItemCount());
                 recyclerView.setAdapter(adapter);
             } else if(codComando == Integer.parseInt(VEDISTANZEERR)) {
