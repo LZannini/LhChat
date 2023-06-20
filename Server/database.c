@@ -74,7 +74,7 @@ PGresult *select_richieste_stanza(int id_stanza){
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
-    
+
     if (conn != NULL){
         sprintf(query, "select utente from richiesta_stanza where id_stanza = $$%d$$", id_stanza);
         res = PQexec(conn, query);
@@ -88,7 +88,7 @@ PGresult *select_richieste_stanza(int id_stanza){
     }
     else
         printf("DB: Errore! Connessione al database fallita.\n");
-        
+
     disconnetti(conn);
     return res;
 }
@@ -97,9 +97,9 @@ PGresult *select_partecipanti(int id_stanza){
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
-    
+
     if (conn != NULL){
-        sprintf(query, "select username from appartenenza_stanza where id_stanza = $$%d$$", id_stanza);
+        sprintf(query, "select * from appartenenza_stanza where id_stanza = $$%d$$", id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if (strlen(error) > 0){
@@ -111,7 +111,7 @@ PGresult *select_partecipanti(int id_stanza){
     }
     else
         printf("DB: Errore! Connessione al database fallita.\n");
-        
+
     disconnetti(conn);
     return res;
 }
@@ -338,7 +338,7 @@ int update_password(char *username, char *nuova_pass){
   PGresult *res;
   char query[1024], error[1024];
   int out = 0;
-  
+
   if (conn != NULL){
     sprintf(query, "update utente set password = $$%s$$ where username = $$%s$$", nuova_pass, username);
     res = PQexec(conn, query);
@@ -365,7 +365,7 @@ int update_username(char *username, char *nuovo_user){
   PGresult *res;
   char query[1024], error[1024];
   int out = 0;
-  
+
   if (conn != NULL){
     sprintf(query, "update utente set username = $$%s$$ where username = $$%s$$", nuovo_user, username);
     res = PQexec(conn, query);
@@ -416,7 +416,7 @@ PGresult *check_if_admin(char *username, int id_stanza){
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
-    
+
     if(conn != NULL){
         sprintf(query, "select * from stanza where nome_admin = $$%s$$ AND id_stanza = $$%d$$", username, id_stanza);
         res = PQexec(conn, query);
@@ -428,12 +428,12 @@ PGresult *check_if_admin(char *username, int id_stanza){
             res = NULL;
         }
     }
-    else    
+    else
         printf("DB: Errore! Connessione al database fallita. \n");
-        
+
     disconnetti(conn);
 }
-    
+
 
 PGresult *check_if_stanza_esiste(char *nome_stanza){
     PGconn *conn = connetti(CONN_STRING);

@@ -25,7 +25,6 @@ public class ProfiloActivity extends AppCompatActivity {
 
     private AlertDialog.Builder builder;
     private int codComando;
-    private Button btnMystanze;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +40,6 @@ public class ProfiloActivity extends AppCompatActivity {
         TextView textViewPassword = (TextView) findViewById(R.id.tv_password);
         textViewUsername.setText(controller.getUtente().getUsername());
         textViewPassword.setText(controller.getUtente().getPassword());
-
-        btnMystanze = (Button) findViewById(R.id.btn_mystanze);
-        btnMystanze.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { openActivityMyStanze(); }
-        });
     }
 
     @Override
@@ -145,11 +138,6 @@ public class ProfiloActivity extends AppCompatActivity {
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
-    }
-
-    public void openActivityMyStanze() {
-        Intent intentMS = new Intent(this, MystanzeActivity.class);
-        startActivity(intentMS);
     }
 
     @Override

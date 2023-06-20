@@ -87,9 +87,6 @@ public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnSt
             case R.id.item2:
                 openActivityCrea();
                 return true;
-            case R.id.item3:
-                openActivityMieStanze();
-                return true;
             case R.id.item4:
                 openActivityProfilo();
                 return true;
@@ -126,11 +123,6 @@ public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnSt
 
     public void openActivityCrea(){
         Intent intentH = new Intent(this, CreastanzaActivity.class);
-        startActivity(intentH);
-    }
-
-    public void openActivityMieStanze(){
-        Intent intentH = new Intent(this, MystanzeActivity.class);
         startActivity(intentH);
     }
 

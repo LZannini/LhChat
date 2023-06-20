@@ -15,7 +15,7 @@ void produci_risposta_registrazione(const int comando, char *risposta, char *use
     sprintf(risposta, "%d|L'utente %s è già registrato, prova ad eseguire l'accesso", comando, username);
   }
 }
-  
+
 void produci_risposta_login(const int comando, char *risposta){
   if(comando == LOGINOK){
     sprintf(risposta, "%d|Login effettuato con successo", comando);
@@ -25,7 +25,7 @@ void produci_risposta_login(const int comando, char *risposta){
     sprintf(risposta, "%d|Utente non registrato, effettua prima la registrazione", comando);
   }
 }
-  
+
 void produci_risposta_new_stanza(const int comando, char *risposta){
   if(comando == CREASTANZAOK){
     sprintf(risposta, "%d|Stanza creata con successo", comando);
@@ -33,21 +33,21 @@ void produci_risposta_new_stanza(const int comando, char *risposta){
     sprintf(risposta, "%d|Errore durante la creazione della stanza", comando);
   }
 }
-  
+
 void produci_risposta_mie_stanze(const int comando, PGresult *res, char *risposta){
   if(comando == VEDISTANZEOK){
     int righe = PQntuples(res);
     int i, id;
     char *id_str;
     char *tuple = malloc(sizeof(char) *1000);
-      
-    tuple[0] = '\0';  
+
+    tuple[0] = '\0';
     for(i=0; i<righe; i++){
       id_str = PQgetvalue(res, i, 0);
       id = atoi(id_str);
       sprintf(tuple + strlen(tuple), "|%d,%s,%s", id, PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
     }
-      
+
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
   }else if(comando == VEDISTANZEERR){
@@ -82,8 +82,8 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
     struct tm tm_orario;
     char *tuple = malloc(sizeof(char) *1000);
     char orario_formattato[20];
-    
-    tuple[0] = '\0';  
+
+    tuple[0] = '\0';
     for(i=0; i<righe; i++){
       orario_str = PQgetvalue(res, i, 1);
       memset(&tm_orario, 0, sizeof(struct tm));
@@ -93,7 +93,7 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
       sprintf(tuple + strlen(tuple), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
     }
     //printf("RIGA93_GESRIC---------%s", tuple);
-    
+
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
   }else if(comando == APRICHATERR){
@@ -133,13 +133,13 @@ void produci_risposta_cerca_stanze(const int comando, PGresult *res, char *rispo
     int i, id;
     char *id_str;
     char *tuple = malloc(sizeof(char) *1000);
-      
+
     for(i=0; i<righe; i++){
       id_str = PQgetvalue(res, i, 0);
       id = atoi(id_str);
       sprintf(tuple + strlen(tuple), "|%d,%s", id, PQgetvalue(res, i, 1));
     }
-      
+
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
   }else if(comando == CERCASTANZAERR){
@@ -178,11 +178,11 @@ void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta)
     int righe = PQntuples(res);
     int i;
     char *tuple = malloc(sizeof(char) *1000);
-      
+
     for(i=0; i<righe; i++){
       sprintf(tuple + strlen(tuple), "|%s", PQgetvalue(res, i, 0));
     }
-      
+
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
   }else if(comando == VEDIRICHIESTEERR){
@@ -207,11 +207,12 @@ void produci_risposta_partecipanti(const int comando, PGresult *res, char *rispo
     int righe = PQntuples(res);
     int i;
     char *tuple = malloc(sizeof(char) *1000);
-      
+
+    tuple[0] = '\0';
     for(i=0; i<righe; i++){
       sprintf(tuple + strlen(tuple), "|%s", PQgetvalue(res, i, 0));
     }
-      
+
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
   }else if(comando == NOPART){

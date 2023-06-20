@@ -32,6 +32,7 @@ import java.util.Date;
 public class ChatActivity extends AppCompatActivity {
 
     private int codComando;
+    private static int roomId;
     private String[] risposta;
     private ArrayList<Messaggio> messages;
     private EditText messageEditText;
@@ -58,7 +59,7 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         if (intent != null && intent.hasExtra("room_id")) {
-            int roomId = intent.getIntExtra("room_id", -1);
+            roomId = intent.getIntExtra("room_id", -1);
 
 
 
@@ -146,5 +147,7 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(intentH);
     }
 
-
+    public static int getRoomId() {
+        return roomId;
+    }
 }
