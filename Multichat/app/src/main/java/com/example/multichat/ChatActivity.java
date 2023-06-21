@@ -3,9 +3,14 @@ package com.example.multichat;
 import static com.example.multichat.controller.Controller.APRICHATERR;
 import static com.example.multichat.controller.Controller.APRICHATOK;
 
+import static com.example.multichat.controller.Controller.ESCIDASTANZAERR;
+import static com.example.multichat.controller.Controller.ESCIDASTANZAOK;
+
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +35,7 @@ import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private AlertDialog.Builder builder;
     private int codComando;
     private static int roomId;
     private String[] risposta;
@@ -131,6 +136,41 @@ public class ChatActivity extends AppCompatActivity {
             case R.id.item1:
                 openActivityPartecipanti();
                 return true;
+            case R.id.item2:
+                builder = new AlertDialog.Builder(this);
+                builder.setMessage("Vuoi abbandonare questa stanza?")
+                        .setCancelable(true)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Controller controller = new Controller();
+                                try {
+                                    codComando = controller.abbandonaStanza(roomId);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (codComando == Integer.parseInt(ESCIDASTANZAOK)) {
+                                    openActivityHome();
+                                }
+                                else if (codComando == Integer.parseInt(ESCIDASTANZAERR)){
+                                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ChatActivity.this);
+                                    builder.setMessage("Errore durante l'abbandono della stanza, riprova.")
+                                            .setCancelable(false)
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                }
+                                            });
+                                    android.app.AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .show();
+                return true;
             default:
                 openActivityHome();
                 return true;
@@ -145,6 +185,12 @@ public class ChatActivity extends AppCompatActivity {
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        return;
     }
 
     public static int getRoomId() {

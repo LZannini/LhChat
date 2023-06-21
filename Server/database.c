@@ -313,7 +313,7 @@ int delete_appartenenza_stanza(char *username, int id_stanza){
     int out = 0;
 
     if (conn != NULL){
-        sprintf(query, "delete from appartenenza_stanza where username = $$%s$$ and id_stanza = $$%d&&", username, id_stanza);
+        sprintf(query, "delete from appartenenza_stanza where username = $$%s$$ and id_stanza = $$%d$$", username, id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){

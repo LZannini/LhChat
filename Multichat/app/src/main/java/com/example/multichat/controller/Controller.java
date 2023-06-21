@@ -99,7 +99,7 @@ public class Controller {
     private static Utente u = new Utente("", "");
 
     private static final int SERVERPORT = 5000;
-    private static final String SERVER_IP = "192.168.1.172";
+    private static final String SERVER_IP = "192.168.198.164";
 
     public Controller() {
     }
@@ -397,6 +397,35 @@ public class Controller {
                     socket.close();
                 } catch (Exception e) {
                     System.out.println("Invio messaggio non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
+    public int abbandonaStanza(int id_stanza) throws InterruptedException {
+        String richiesta = ESCIDASTANZA + "|" + id_stanza + "|" + u.getUsername();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Eliminazione utente non riuscita, socket chiusa");
                 }
             }
         });

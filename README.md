@@ -1,3 +1,2 @@
-![LhChat](https://i.ibb.co/QX3RSyK/icon-lhchat.png)
-
+# LhChat
 Progetto Laboratorio di Sistemi Operativi (Traccia 6)
