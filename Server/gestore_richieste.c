@@ -57,6 +57,26 @@ void produci_risposta_mie_stanze(const int comando, PGresult *res, char *rispost
   }
 }
 
+void produci_risposta_all_stanze(const int comando, PGresult *res, char *risposta){
+  if(comando == ALLSTANZEOK){
+    int righe = PQntuples(res);
+    int i, id;
+    char *id_str;
+    char *tuple = malloc(sizeof(char) *1000);
+
+    tuple[0] = '\0';
+    for(i=0; i<righe; i++){
+      id_str = PQgetvalue(res, i, 0);
+      id = atoi(id_str);
+      sprintf(tuple + strlen(tuple), "|%d,%s,%s", id, PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
+    }
+
+    sprintf(risposta, "%d%s", comando, tuple);
+    free(tuple);
+  }else if(comando == ALLSTANZEERR){
+    sprintf(risposta, "%d|Si è verificato un errore durante la visualizzazione delle stanze", comando);
+}
+
 void produci_risposta_new_membro(const int comando, char *risposta){
   if(comando == ACCETTARICOK){
     sprintf(risposta, "%d|Membro inserito nella stanza con successo", comando);

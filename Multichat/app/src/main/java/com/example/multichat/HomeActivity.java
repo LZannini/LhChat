@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnSt
     private AlertDialog.Builder builder;
     private String[] risposta;
     private ArrayList<Stanza> lista_stanze = new ArrayList<Stanza>();
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
 
     @Override

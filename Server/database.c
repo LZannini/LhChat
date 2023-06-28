@@ -47,6 +47,30 @@ PGresult *select_stanze_utente(char *username){
     return res;
 }
 
+PGresult *select_stanze(){
+    PGconn *conn = connetti(CONN_STRING);;
+    PGresult *res;
+    char query[1024], error[1024];
+
+    if(conn != NULL)
+    {
+        sprintf(query, "select nome_stanza from stanza");
+        res = PQexec(conn, query);
+        strcpy(error, PQresultErrorMessage(res));
+        if(strlen(error) > 0){
+            printf("%s\n", error);
+            printf("DB: Errore select: stanze non trovate.\n");
+            PQclear(res);
+            res = NULL;
+        }
+    }
+    else
+        printf("DB: Errore! Connessione al database fallita.\n");
+
+    disconnetti(conn);
+    return res;
+}
+
 PGresult *select_messaggi_stanza(int id_stanza){
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;

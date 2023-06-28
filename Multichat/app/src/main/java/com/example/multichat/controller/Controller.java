@@ -41,6 +41,7 @@ public class Controller {
     public static final String RICHIESTASTANZA = "015";
     public static final String VEDIRICHIESTE = "016";
     public static final String ADMIN = "017";
+    public static final String ALLSTANZE = "018";
 
     //comandi OK
     public static final String LOGINOK = "101";
@@ -60,6 +61,7 @@ public class Controller {
     public static final String RICHIESTASTANZAOK = "115";
     public static final String VEDIRICHIESTEOK = "116";
     public static final String ADMINSI = "117";
+    public static final String ALLSTANZEOK = "118";
 
     //comandi ERR
     public static final String LOGINERR = "201";
@@ -79,6 +81,7 @@ public class Controller {
     public static final String RICHIESTASTANZAERR = "215";
     public static final String VEDIRICHIESTEERR = "216";
     public static final String ADMINERR = "217";
+    public static final String ALLSTANZEERR = "218";
 
     //altri comandi
     public static final String LOGINNONTROVATO = "301";
@@ -294,6 +297,34 @@ public class Controller {
 
     public String[] vediStanze() throws Exception {
         String richiesta = VEDISTANZE + "|" + u.getUsername();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    dati = risposta.split("\\|");
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return dati;
+    }
+
+    public String[] vediAllStanze() throws Exception {
+        String richiesta = ALLSTANZE;
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

@@ -7,6 +7,7 @@
 PGconn *connetti(char *connstring);
 void disconnetti(PGconn *conn);
 PGresult *select_stanze_utente(char *username);
+PGresult *select_stanze();
 PGresult *select_messaggi_stanza(int id_stanza);
 PGresult *select_richieste_stanza(int id_stanza);
 PGresult *select_partecipanti(int id_stanza);

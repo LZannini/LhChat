@@ -12,10 +12,33 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".CercastanzaActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="379dp"
+        android:layout_height="548dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="159dp" />
+
+    <TextView
+        android:id="@+id/partecipanti_errorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message_error_rooms"
+        android:textColor="@color/white"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        tools:ignore="MissingConstraints" />
+
     <EditText
         android:id="@+id/nomestanza"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:background="@color/gray"
         android:fontFamily="sans-serif-condensed-medium"
