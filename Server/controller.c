@@ -381,6 +381,8 @@ void gestisci_richiesta_client(char *richiesta, char *risposta){
     richiesta_new_stanza(resto_richiesta, risposta);
   }else if(cod_comando == VEDISTANZE){
     richiesta_vedi_stanze(resto_richiesta, risposta);
+  }else if (cod_comando == ALLSTANZE){
+    richiesta_all_stanze(resto_richiesta, risposta);
   }else if(cod_comando == INVIAMESS){
     richiesta_invia_messaggio(resto_richiesta, risposta);
   }else if(cod_comando == ACCETTARIC){

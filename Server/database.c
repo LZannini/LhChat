@@ -54,7 +54,7 @@ PGresult *select_stanze(){
 
     if(conn != NULL)
     {
-        sprintf(query, "select nome_stanza from stanza");
+        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza");
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){

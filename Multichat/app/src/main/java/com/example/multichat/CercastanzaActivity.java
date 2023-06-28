@@ -1,10 +1,7 @@
 package com.example.multichat;
 
-import static com.example.multichat.R.id.recyclerView;
 import static com.example.multichat.controller.Controller.ALLSTANZEERR;
 import static com.example.multichat.controller.Controller.ALLSTANZEOK;
-import static com.example.multichat.controller.Controller.VEDIPARTERR;
-import static com.example.multichat.controller.Controller.VEDIPARTOK;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.multichat.adapters.PartecipantiAdapter;
 import com.example.multichat.adapters.RoomsAdapter;
 import com.example.multichat.controller.Controller;
-import com.example.multichat.model.Appartenenza_stanza;
 import com.example.multichat.model.Stanza;
 
 import java.util.ArrayList;
@@ -32,13 +27,12 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     private ArrayList<Stanza> lista_stanze = new ArrayList<Stanza>();
     private RecyclerView recyclerView;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cercastanza);
         recyclerView = findViewById(R.id.recyclerView);
-        TextView errorTextView = findViewById(R.id.errorTextView);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView errorTextView = findViewById(R.id.errorTextViewAllRooms);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -85,7 +79,5 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     }
 
     @Override
-    public void onStanzaClick(int position) {
-
-    }
+    public void onStanzaClick(int position) { }
 }

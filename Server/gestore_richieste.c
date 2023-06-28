@@ -73,7 +73,7 @@ void produci_risposta_all_stanze(const int comando, PGresult *res, char *rispost
 
     sprintf(risposta, "%d%s", comando, tuple);
     free(tuple);
-  }else if(comando == ALLSTANZEERR){
+  }else if(comando == ALLSTANZEERR)
     sprintf(risposta, "%d|Si è verificato un errore durante la visualizzazione delle stanze", comando);
 }
 

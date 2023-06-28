@@ -33,7 +33,6 @@ public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnSt
     private ArrayList<Stanza> lista_stanze = new ArrayList<Stanza>();
     private RecyclerView recyclerView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

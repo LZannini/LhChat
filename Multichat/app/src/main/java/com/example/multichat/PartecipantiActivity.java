@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.example.multichat.adapters.PartecipantiAdapter;
 import com.example.multichat.controller.Controller;
 import com.example.multichat.model.Appartenenza_stanza;
-import com.example.multichat.model.Utente;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,7 @@ public class PartecipantiActivity extends AppCompatActivity implements Partecipa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_partecipanti);
         recyclerView = findViewById(R.id.recyclerView);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView errorTextView = findViewById(R.id.partecipanti_errorTextView);
+        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView errorTextView = findViewById(R.id.errorTextViewAllRooms);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 

@@ -21,6 +21,7 @@
 #define RICHIESTASTANZA 15
 #define VEDIRICHIESTE 16
 #define ADMIN 17
+#define ALLSTANZE 18
 // comandi OK server
 #define LOGINOK 101
 #define REGOK 102
@@ -39,6 +40,7 @@
 #define RICHIESTASTANZAOK 115
 #define VEDIRICHIESTEOK 116
 #define ADMINSI 117
+#define ALLSTANZEOK 118
 // comandi ERR server
 #define LOGINERR 201
 #define REGERR 202
@@ -57,6 +59,7 @@
 #define RICHIESTASTANZAERR 215
 #define VEDIRICHIESTEERR 216
 #define ADMINERR 217
+#define ALLSTANZEERR 218
 // altri errori
 #define LOGINNONTROVATO 301
 #define GIAREGISTRATO 302
@@ -71,6 +74,7 @@ void produci_risposta_registrazione(const int comando, char *risposta, char *use
 void produci_risposta_login(const int comando, char *risposta);
 void produci_risposta_new_stanza(const int comando, char *risposta);
 void produci_risposta_mie_stanze(const int comando, PGresult *res, char *risposta);
+void produci_risposta_all_stanze(const int comando, PGresult *res, char *risposta);
 void produci_risposta_new_membro(const int comando, char *risposta);
 void produci_risposta_ins_mess(const int comando, char *risposta);
 void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta);
