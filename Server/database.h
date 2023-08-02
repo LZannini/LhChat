@@ -2,7 +2,7 @@
 #define DATABASE_H
 
 #include <libpq-fe.h>
-#define CONN_STRING "user=postgres dbname=lhchat"
+#define CONN_STRING "user=postgres dbname=LhChat"
 
 PGconn *connetti(char *connstring);
 void disconnetti(PGconn *conn);

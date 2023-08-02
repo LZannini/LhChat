@@ -22,6 +22,7 @@
 #define VEDIRICHIESTE 16
 #define ADMIN 17
 #define ALLSTANZE 18
+#define LEAVECHAT 19
 // comandi OK server
 #define LOGINOK 101
 #define REGOK 102
@@ -41,6 +42,7 @@
 #define VEDIRICHIESTEOK 116
 #define ADMINSI 117
 #define ALLSTANZEOK 118
+#define LEAVECHATOK 119
 // comandi ERR server
 #define LOGINERR 201
 #define REGERR 202
@@ -60,6 +62,7 @@
 #define VEDIRICHIESTEERR 216
 #define ADMINERR 217
 #define ALLSTANZEERR 218
+#define LEAVECHATERR 219
 // altri errori
 #define LOGINNONTROVATO 301
 #define GIAREGISTRATO 302
@@ -88,5 +91,6 @@ void produci_risposta_ins_ric(const int comando, char *risposta);
 void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta);
 void produci_risposta_admin(const int comando, PGresult *res, char *risposta);
 void produci_risposta_partecipanti(const int comando, PGresult *res, char *risposta);
+void produci_risposta_leave_chat(const int comando, char *risposta);
 
 #endif
