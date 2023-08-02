@@ -8,12 +8,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MessageAdapter extends ArrayAdapter<String> {
+public class Class extends ArrayAdapter<String> {
 
     private Context context;
     private ArrayList<String> messages;
 
-    public MessageAdapter(Context context, ArrayList<String> messages) {
+    public Class(Context context, ArrayList<String> messages) {
         super(context, 0, messages);
         this.context = context;
         this.messages = messages;
