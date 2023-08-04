@@ -2,6 +2,8 @@ package com.example.multichat;
 
 import static com.example.multichat.controller.Controller.ALLSTANZEERR;
 import static com.example.multichat.controller.Controller.ALLSTANZEOK;
+import static com.example.multichat.controller.Controller.RICHIESTASTANZAERR;
+import static com.example.multichat.controller.Controller.RICHIESTASTANZAOK;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,13 +30,14 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     private String[] risposta;
     private ArrayList<Stanza> lista_stanze = new ArrayList<Stanza>();
     private RecyclerView recyclerView;
+    private Controller controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cercastanza);
         recyclerView = findViewById(R.id.recyclerView);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView errorTextView = findViewById(R.id.errorTextViewAllRooms);
+        TextView errorTextView = findViewById(R.id.errorTextViewAllRooms);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -40,10 +45,10 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
         actionBar.setTitle("Cerca Stanza");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Controller controller = new Controller();
+        controller = new Controller();
 
         try {
-            risposta = controller.vediAllStanze();
+            risposta = controller.esploraStanze();
             int codComando = Integer.parseInt(risposta[0]);
 
             if(codComando == Integer.parseInt(ALLSTANZEOK)) {
@@ -79,5 +84,57 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     }
 
     @Override
-    public void onStanzaClick(int position) { }
+    public void onStanzaClick(int position) {
+        Stanza selectedStanza = lista_stanze.get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Vuoi richiedere l'accesso per questa stanza?\nnome stanza: "+selectedStanza.getNome_stanza()+"\nadmin: "+selectedStanza.getNome_admin())
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+                        controller = new Controller();
+                        try {
+                            int codComando = controller.richiesta_stanza(selectedStanza.getId_stanza());
+
+                            if (codComando == Integer.parseInt(RICHIESTASTANZAOK)) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(CercastanzaActivity.this);
+                                builder.setMessage("Richiesta effettuata con successo!")
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                openActivityHome();
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            } else if (codComando == Integer.parseInt(RICHIESTASTANZAERR)) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(CercastanzaActivity.this);
+                                builder.setMessage("Si è verificato un errore durante la richiesta d'accesso alla stanza!")
+                                        .setCancelable(false)
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                openActivityHome();
+                                            }
+                                        });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            }
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //non fa nulla e chiude il dialog
+                    }
+                });
+        builder.show();
+    }
+
+    public void openActivityHome(){
+        Intent intentH = new Intent(this, HomeActivity.class);
+        startActivity(intentH);
+    }
 }

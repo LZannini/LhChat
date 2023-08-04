@@ -92,6 +92,7 @@ public class Controller {
     public static final String CHATVUOTA = "306";
     public static final String STANZENONTROVATE = "310";
     public static final String NOPART = "311";
+    public static final String RICHIESTAGIAINVIATA = "315";
     public static final String NORICHIESTE = "316";
     public static final String ADMINNO = "317";
 
@@ -327,8 +328,8 @@ public class Controller {
         return dati;
     }
 
-    public String[] vediAllStanze() throws Exception {
-        String richiesta = ALLSTANZE;
+    public String[] esploraStanze() throws Exception {
+        String richiesta = ALLSTANZE + "|" + u.getUsername();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -469,6 +470,36 @@ public class Controller {
         t.join(); // Attendo la terminazione del thread
         return codComando;
     }
+
+    public int richiesta_stanza(int id_stanza) throws Exception {
+        String richiesta = RICHIESTASTANZA + "|" + u.getUsername() + "|" + id_stanza;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Richiesta s'accesso non riuscita, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
 
     public void chiudiConnessione() throws InterruptedException {
         String richiesta = LEAVECHAT + "|" + u.getUsername();
