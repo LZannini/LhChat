@@ -13,36 +13,100 @@
 #include <string.h>
 
 #include "controller.h"
+#include "gestore_richieste.h"
+
 
 #define PORTA 5000
+#define MAX_USERS 100
+
+typedef struct {
+	int id_stanza;
+	int socket_fd;
+	char username[200];
+} OnlineUser;
+
+OnlineUser onlineUsers[MAX_USERS];
+int onUsersCount;
 
 void *gestisci(void *arg){
   int sock = *(int *) arg;
   int read_size;
+  int cod_comando;
   char buffer[2000];
   char risposta[2000];
   
+  printf("RIGA35 SERVER--------Socket fd: %d\n", sock);
 
   while ((read_size = recv(sock, buffer, 2000, 0)) > 0) {
   if (read_size < 0) {
     perror("Server: errore durante la lettura dei dati dal socket");
     break;
   }else{
-    printf("Server: richiesta ricevuta con successo!\n", buffer);
+    printf("Server: richiesta ricevuta con successo!\n");
   }
   
   printf("RIGA34_SERVER----------%s\n", buffer);
-  gestisci_richiesta_client(buffer, &risposta);
-  //printf("\n\nRIGA36_SERVER----------Server: la richiesta in uscita è: %s\n\n", risposta);
+  cod_comando = gestisci_richiesta_client(buffer, &risposta, sock);
+  printf("\n\nRIGA36_SERVER----------Server: la richiesta in uscita è: %s\n\n", risposta);
   if (risposta != NULL) {
     send(sock, risposta, strlen(risposta), 0);
   } else {
     printf("Server: errore durante il recupero delle informazioni richieste");
   }
 }
-
-  close(*(int *) arg);
+  if (cod_comando != APRICHAT) {
+  	close(*(int *) arg);
+  }
   pthread_exit(0);
+}
+
+void aggiungiUtente(int socket_fd, int id_stanza, char *username){
+  if (onUsersCount < MAX_USERS) {
+  	onlineUsers[onUsersCount].socket_fd = socket_fd;
+  	onlineUsers[onUsersCount].id_stanza = id_stanza;
+  	strcpy(onlineUsers[onUsersCount].username, username);
+  	  	printf("\n\nRIGA_63_SERVER--------aggiunta array onlineUsers[%d] id_stanza:%d fd:%d user:%s\n", onUsersCount, onlineUsers[onUsersCount].id_stanza, socket_fd, onlineUsers[onUsersCount].username);
+  	onUsersCount++;
+  } else {
+  	printf("Si è verificato un errore!\n");
+  }
+}
+
+void mandaMessaggio(char *username, char *notifica, int id_stanza) {
+  for (int i = 0; i < onUsersCount; i++) {
+  	if (onlineUsers[i].id_stanza == id_stanza && strcmp(username, onlineUsers[i].username) != 0) {
+  		printf("\n\nRIGA_71_SERVER--------Sto inviando i messaggi a %s la notifica è %s\n\n", onlineUsers[i].username, notifica);
+  		if(send(onlineUsers[i].socket_fd, notifica, strlen(notifica), 0) > 0){
+  			printf("funziona\n");
+  		} else {
+  			printf("non funziona\n");
+  		}
+  	}
+  }
+}
+
+int chiudiConnessione(char *username) {
+	int trovato = 0;
+	int i;
+	
+	for(i = 0; i < onUsersCount; i++) {
+		printf("\n\n\n%s---%s\n", onlineUsers[i].username, username);
+		if(strcmp(onlineUsers[i].username, username) == 0) {
+			trovato = 1;
+			close(onlineUsers[i].socket_fd);
+			printf("trovato\n\n\n");
+			break;
+		}
+	}
+	
+	if(trovato) {
+		for(; i < onUsersCount; i++) {
+			onlineUsers[i] = onlineUsers[i+1];
+		}
+		
+		onUsersCount--;
+	}
+	return trovato;
 }
   
 
@@ -90,6 +154,7 @@ int main(){
   while(1){
 
     c_fd = accept(s_fd, (struct sockaddr *) &client, &len);
+    printf("RIGA 125 SERVER---------c_fd all inizio: %d\n", c_fd);
     if (c_fd < 0) {
       perror("Errore durante l'accettazione della connessione");
       exit(1);

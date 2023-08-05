@@ -67,16 +67,17 @@ public class PartecipantiActivity extends AppCompatActivity implements Partecipa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), ChatActivity.class);
-        startActivityForResult(myIntent, 0);
+        //Intent myIntent = new Intent(getApplicationContext(), ChatActivity.class);
+        //startActivityForResult(myIntent, 0);
+        finish();
         return true;
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         startActivity(new Intent(getApplicationContext(), ChatActivity.class));
         return;
-    }
+    }*/
 
     @Override
     public void onUtenteClick(int position) { }

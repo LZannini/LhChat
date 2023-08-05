@@ -1,9 +1,12 @@
 package com.example.multichat.model;
 
+import java.net.Socket;
+
 public class Utente {
 
     private String username;
     private String password;
+    private Socket currentChatConnection;
 
     public Utente(String username, String password) {
         setUsername(username);
@@ -25,4 +28,6 @@ public class Utente {
     public void setPassword(String password) {
         this.password = password;
     }
+    public void setCurrentChatConnection(Socket connection) { this.currentChatConnection = connection; }
+    public Socket getCurrentChatConnection() { return currentChatConnection; }
 }

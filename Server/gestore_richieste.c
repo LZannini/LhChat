@@ -100,22 +100,21 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
     char *orario_str;
     time_t orario;
     struct tm tm_orario;
-    char *tuple = malloc(sizeof(char) *1000);
-    char orario_formattato[20];
+    char risposta_tmp[2000];
+    char orario_formattato[30];
 
-    tuple[0] = '\0';
+    risposta_tmp[0] = '\0';
     for(i=0; i<righe; i++){
       orario_str = PQgetvalue(res, i, 1);
       memset(&tm_orario, 0, sizeof(struct tm));
       strptime(orario_str, "%Y-%m-%d %H:%M:%S", &tm_orario);
       orario = mktime(&tm_orario);
       strftime(orario_formattato, sizeof(orario_formattato), "%Y-%m-%d %H:%M:%S", localtime(&orario));
-      sprintf(tuple + strlen(tuple), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
+      snprintf(risposta_tmp + strlen(risposta_tmp), sizeof(risposta_tmp) - strlen(risposta_tmp), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
     }
     //printf("RIGA93_GESRIC---------%s", tuple);
 
-    sprintf(risposta, "%d%s", comando, tuple);
-    free(tuple);
+    sprintf(risposta, "%d%s", comando, risposta_tmp);
   }else if(comando == APRICHATERR){
     sprintf(risposta, "%d|Errore durante il caricamento della chat", comando);
   }else if(comando == CHATVUOTA){
@@ -154,10 +153,11 @@ void produci_risposta_cerca_stanze(const int comando, PGresult *res, char *rispo
     char *id_str;
     char *tuple = malloc(sizeof(char) *1000);
 
+    tuple[0] = '\0';
     for(i=0; i<righe; i++){
       id_str = PQgetvalue(res, i, 0);
       id = atoi(id_str);
-      sprintf(tuple + strlen(tuple), "|%d,%s", id, PQgetvalue(res, i, 1));
+      sprintf(tuple + strlen(tuple), "|%d,%s, %s", id, PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
     }
 
     sprintf(risposta, "%d%s", comando, tuple);
@@ -240,4 +240,12 @@ void produci_risposta_partecipanti(const int comando, PGresult *res, char *rispo
   }else if(comando == VEDIPARTERR){
     sprintf(risposta, "%d|Errore durante la ricerca dei partecipanti della stanza", comando);
   }
+}
+
+void produci_risposta_leave_chat(const int comando, char *risposta){
+	if(comando == LEAVECHATOK){
+		sprintf(risposta, "%d|Connessione chiusa nel server", comando);
+	} else {
+		sprintf(risposta, "%d|Errore durante la chiusura della connessione", comando);
+	}
 }

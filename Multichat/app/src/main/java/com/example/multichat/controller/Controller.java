@@ -42,6 +42,7 @@ public class Controller {
     public static final String VEDIRICHIESTE = "016";
     public static final String ADMIN = "017";
     public static final String ALLSTANZE = "018";
+    public static final String LEAVECHAT = "019";
 
     //comandi OK
     public static final String LOGINOK = "101";
@@ -62,6 +63,7 @@ public class Controller {
     public static final String VEDIRICHIESTEOK = "116";
     public static final String ADMINSI = "117";
     public static final String ALLSTANZEOK = "118";
+    public static final String LEAVECHATOK = "119";
 
     //comandi ERR
     public static final String LOGINERR = "201";
@@ -82,6 +84,7 @@ public class Controller {
     public static final String VEDIRICHIESTEERR = "216";
     public static final String ADMINERR = "217";
     public static final String ALLSTANZEERR = "218";
+    public static final String LEAVECHATERR = "219";
 
     //altri comandi
     public static final String LOGINNONTROVATO = "301";
@@ -89,6 +92,7 @@ public class Controller {
     public static final String CHATVUOTA = "306";
     public static final String STANZENONTROVATE = "310";
     public static final String NOPART = "311";
+    public static final String RICHIESTAGIAINVIATA = "315";
     public static final String NORICHIESTE = "316";
     public static final String ADMINNO = "317";
 
@@ -99,10 +103,11 @@ public class Controller {
     private int codComando;
     private ArrayList<Stanza> lista_stanze;
     String[] dati = new String[0];
-    private static Utente u = new Utente("", "");
+    public static Utente u = new Utente("", "");
+    private String risposta;
 
-    private static final int SERVERPORT = 5000;
-    private static final String SERVER_IP = "192.168.198.164";
+    public static final int SERVERPORT = 5000;
+    public static final String SERVER_IP = "192.168.1.172";
 
     public Controller() {
     }
@@ -323,8 +328,8 @@ public class Controller {
         return dati;
     }
 
-    public String[] vediAllStanze() throws Exception {
-        String richiesta = ALLSTANZE;
+    public String[] esploraStanze() throws Exception {
+        String richiesta = ALLSTANZE + "|" + u.getUsername();
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -396,7 +401,8 @@ public class Controller {
                     int bytesRead = inputStream.read(buffer);
                     String risposta = new String(buffer, 0, bytesRead);
                     dati = risposta.split("\\|");
-                    socket.close();
+                    System.out.println(""+dati[1]);
+                    u.setCurrentChatConnection(socket);
                 } catch (Exception e) {
                     System.out.println("Apertura chat non riuscita, socket chiusa");
                 }
@@ -436,6 +442,34 @@ public class Controller {
         return codComando;
     }
 
+    public String[] cercaStanza(String nome_stanza) throws InterruptedException {
+        String richiesta = CERCASTANZA + "|" + nome_stanza;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    dati = risposta.split("\\|");
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return dati;
+    }
+
     public int abbandonaStanza(int id_stanza) throws InterruptedException {
         String richiesta = ESCIDASTANZA + "|" + id_stanza + "|" + u.getUsername();
         Thread t = new Thread(new Runnable() {
@@ -463,6 +497,69 @@ public class Controller {
         t.start(); // Avvio del thread
         t.join(); // Attendo la terminazione del thread
         return codComando;
+    }
+
+    public int richiesta_stanza(int id_stanza) throws Exception {
+        String richiesta = RICHIESTASTANZA + "|" + u.getUsername() + "|" + id_stanza;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Richiesta s'accesso non riuscita, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
+
+    public void chiudiConnessione() throws InterruptedException {
+        String richiesta = LEAVECHAT + "|" + u.getUsername();
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    if(codComando == Integer.parseInt(LEAVECHATOK)) {
+                        u.getCurrentChatConnection().close();
+                    } else {
+                        System.out.println("Si è verificato un errore durante la chiusura della connessione!");
+                    }
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Eliminazione utente non riuscita, socket chiusa");
+                }
+            }
+        });
+        t.start();
+        t.join();
     }
 
     public void setUtente(Utente utente) {

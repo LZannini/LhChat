@@ -3,6 +3,7 @@ package com.example.multichat;
 import static com.example.multichat.controller.Controller.APRICHATERR;
 import static com.example.multichat.controller.Controller.APRICHATOK;
 
+import static com.example.multichat.controller.Controller.CHATVUOTA;
 import static com.example.multichat.controller.Controller.ESCIDASTANZAERR;
 import static com.example.multichat.controller.Controller.ESCIDASTANZAOK;
 
@@ -29,6 +30,13 @@ import com.example.multichat.controller.Controller;
 import com.example.multichat.model.Messaggio;
 import com.example.multichat.model.Stanza;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +52,12 @@ public class ChatActivity extends AppCompatActivity {
     private Button sendButton;
     private RecyclerView messageRecyclerView;
     private MessageAdapter messageAdapter;
+    private Socket socket;
+    private Controller controller;
+    private volatile String notifica;
+    private volatile Boolean connectionClosed = true;
+    private Thread t;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String nome_stanza = intent.getStringExtra("nome_stanza");
-        Controller controller = new Controller();
+        controller = new Controller();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(nome_stanza);
@@ -65,8 +79,6 @@ public class ChatActivity extends AppCompatActivity {
 
         if (intent != null && intent.hasExtra("room_id")) {
             roomId = intent.getIntExtra("room_id", -1);
-
-
 
             messages = new ArrayList<>();
             messageEditText = findViewById(R.id.edit_text_message);
@@ -93,13 +105,21 @@ public class ChatActivity extends AppCompatActivity {
                     messageRecyclerView.scrollToPosition(messages.size() - 1);
                     messageAdapter = new MessageAdapter(messages);
                     messageRecyclerView.setAdapter(messageAdapter);
+                    connectionClosed = false;
                 } else if(codComando == Integer.parseInt(APRICHATERR)){
                     errorTextView.setText("Errore durante il caricamento delle stanze!");
                     errorTextView.setVisibility(View.VISIBLE);
+                } else if(codComando == Integer.parseInt(CHATVUOTA)) {
+                    messageAdapter = new MessageAdapter(messages);
+                    messageRecyclerView.setAdapter(messageAdapter);
+                    connectionClosed = false;
                 }
-            } catch (Exception e) {
-                throw new RuntimeException();
+            }catch (Exception e) {
+                e.printStackTrace(); // Registra la traccia dello stack dell'eccezione per identificare il problema
+                errorTextView.setText("Si è verificato un errore durante l'apertura della chat!");
+                errorTextView.setVisibility(View.VISIBLE);
             }
+
 
             sendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -113,6 +133,14 @@ public class ChatActivity extends AppCompatActivity {
                     if (!testo_messaggio.isEmpty()) {
                         try {
                             codComando = controller.inviaMessaggio(testo_messaggio, data_formattata, roomId);
+                            if (codComando == Integer.parseInt(controller.INVIAMESSOK)) {
+                                Messaggio messaggio = new Messaggio(controller.u.getUsername(), roomId, data_messaggio, testo_messaggio);
+                                messaggio.setInviato(true);
+                                messages.add(messaggio);
+                                messageAdapter.notifyDataSetChanged();
+                            } else {
+                                //mostra messaggio d'errore all'utente
+                            }
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -121,6 +149,72 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
         }
+        connettiServer();
+    }
+
+    private void connettiServer() {
+        t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                socket = controller.getUtente().getCurrentChatConnection();
+                riceviMessaggiInRealTime();
+            }
+        });
+        t.start();
+    }
+
+    private void riceviMessaggiInRealTime() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                    //System.out.println("wegbwejrg");
+                    //InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                    //BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    //BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                {
+                    while (!connectionClosed) {
+                        System.out.println("La connessione è ancora aperta.");
+                        InputStream inputStream = socket.getInputStream();
+                        byte[] buffer = new byte[1024];
+                        int bytesRead = inputStream.read(buffer);
+                        if (bytesRead == -1) {
+                            System.out.println("La connessione è stata chiusa");
+                            connectionClosed = true;
+                        } else {
+                            notifica = new String(buffer, 0, bytesRead);
+                            System.out.println("stampo:" + notifica);
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String formatoData = "yyyy-MM-dd HH:mm:ss";
+                                    SimpleDateFormat sdf = new SimpleDateFormat(formatoData);
+                                    String[] dati_messaggi = notifica.split("\\|");
+                                    System.out.println("" + dati_messaggi[0] + "," + dati_messaggi[1] + "," + dati_messaggi[2] + "," + dati_messaggi[3]);
+                                    Messaggio messaggio;
+                                    try {
+                                        Date orario = sdf.parse(dati_messaggi[2]);
+                                        messaggio = new Messaggio(dati_messaggi[0], roomId, orario, dati_messaggi[3]);
+                                        messaggio.setInviato(false);
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    messages.add(messaggio);
+                                    messageAdapter.notifyItemInserted(messages.size() - 1);
+                                    messageRecyclerView.scrollToPosition(messages.size() - 1);
+                                }
+                            });
+
+                        }
+                    }
+                    System.out.println("Uscito dal while");
+                } catch (IOException e) {
+                    openActivityHome();
+                    //throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -172,10 +266,18 @@ public class ChatActivity extends AppCompatActivity {
                         .show();
                 return true;
             default:
+                try {
+                    connectionClosed = true;
+                    t.join();
+                    controller.chiudiConnessione();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 openActivityHome();
                 return true;
         }
     }
+
 
     public void openActivityPartecipanti(){
         Intent intentP = new Intent(this, PartecipantiActivity.class);
@@ -189,6 +291,13 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        try {
+            connectionClosed = true;
+            t.join();
+            controller.chiudiConnessione();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         return;
     }

@@ -32,7 +32,7 @@ public class CreastanzaActivity extends AppCompatActivity {
         actionBar.setTitle("Crea Stanza");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        nomeStanzaEditText = findViewById(R.id.nomestanza);
+        nomeStanzaEditText = findViewById(R.id.stanzacercata);
         Controller controller = new Controller();
 
         btnC = (Button) findViewById(R.id.btn_create);

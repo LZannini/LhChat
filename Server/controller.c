@@ -5,6 +5,7 @@
 #include <libpq-fe.h>
 #include <time.h>
 
+#include "server.h"
 #include "controller.h"
 #include "gestore_richieste.h"
 #include "database.h"
@@ -92,8 +93,10 @@ void richiesta_all_stanze(char *richiesta, char *risposta){
   PGresult *stanze_trovate;
 
   char *username;
+  
+  username = strtok(richiesta, "|");
 
-  stanze_trovate = select_stanze();
+  stanze_trovate = select_stanze(username);
   if(stanze_trovate == NULL){
     produci_risposta_all_stanze(ALLSTANZEERR, stanze_trovate, risposta);
   }else{
@@ -101,7 +104,7 @@ void richiesta_all_stanze(char *richiesta, char *risposta){
   }
 }
 
-void richiesta_invia_messaggio(char *richiesta, char *risposta){
+void richiesta_invia_messaggio(char *richiesta, char *risposta, int socket_fd){
 
   int inserito = 0;
 
@@ -109,29 +112,35 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta){
   char *id_stanza_str;
   char *orario;
   char *testo;
+  char *copia_richiesta = malloc(1000 * sizeof(char));
 
   time_t t_orario;
   struct tm tm_orario;
   int id_stanza;
 
-  printf("RIGA 105_CONTROLLER--------%s\n", richiesta);
+  strncpy(copia_richiesta, richiesta, 1000);
+  printf("RIGA 120_CONTROLLER--------%s\n", richiesta);
   mittente = strtok(richiesta, "|");
   id_stanza_str = strtok(NULL, "|");
   orario = strtok(NULL, "|");
   testo = strtok(NULL, "|");
-
   id_stanza = atoi(id_stanza_str);
 
   memset(&tm_orario, 0, sizeof(struct tm));
   strptime(orario, "%Y-%m-%d %H:%M:%S", &tm_orario);
   t_orario = mktime(&tm_orario);
-
+  printf("RIGA 130_CONTROLLER--------%s\n", copia_richiesta);
   inserito = insert_messaggio(mittente, id_stanza, t_orario, testo);
+  
   if(inserito == 0){
     produci_risposta_ins_mess(INVIAMESSERR, risposta);
   }else{
+        mandaMessaggio(mittente, copia_richiesta, id_stanza);
     produci_risposta_ins_mess(INVIAMESSOK, risposta);
+    printf("RIGA_137_CONTROLLER\n\n\n\n");
   }
+  
+  free(copia_richiesta);
 }
 
 void richiesta_accetta_richiesta(char *richiesta, char *risposta){
@@ -155,24 +164,29 @@ void richiesta_accetta_richiesta(char *richiesta, char *risposta){
 }
 
 
-void richiesta_apri_chat(char *richiesta, char *risposta){
+void richiesta_apri_chat(char *richiesta, char *risposta, int socket_fd){
   PGresult *mess_trovati;
 
+  char *username;
   char *id_stanza_str;
   int id_stanza;
 
   id_stanza_str = strtok(richiesta, "|");
-
+  username = strtok(NULL, "|");
   id_stanza = atoi(id_stanza_str);
 
   mess_trovati = select_messaggi_stanza(id_stanza);
+  
+  printf("RIGA 174 CONTROLLER----------file descriptor per questo utente: %d\n", socket_fd);
 
   if(mess_trovati == NULL){
     produci_risposta_vedi_chat(APRICHATERR, mess_trovati, risposta);
   }else if(PQntuples(mess_trovati) == 0){
     produci_risposta_vedi_chat(CHATVUOTA, mess_trovati, risposta);
+    aggiungiUtente(socket_fd, id_stanza, username);
   }else{
     produci_risposta_vedi_chat(APRICHATOK, mess_trovati, risposta);
+    aggiungiUtente(socket_fd, id_stanza, username);
   }
 }
 
@@ -361,12 +375,27 @@ void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
 }
 
 
-void gestisci_richiesta_client(char *richiesta, char *risposta){
+void richiesta_leave_chat(char *richiesta, char *risposta) {
+  char *username;
+  int trovato = 0;
+  
+  username = strtok(richiesta, "|");
+  
+  trovato = chiudiConnessione(username);
+  printf("RIGA 383 CONTROLLER.C--------%d\n", trovato);
+  if(trovato) {
+  	produci_risposta_leave_chat(LEAVECHATOK, risposta);
+  } else {
+  	produci_risposta_leave_chat(LEAVECHATERR, risposta);
+  }
+}
+
+int gestisci_richiesta_client(char *richiesta, char *risposta, int socket_fd){
   int cod_comando;
   char *comando;
   char *resto_richiesta;
 
-
+//printf("RIGA 375_CONTROLLER--------%d\n", socket_fd);
 
   comando = strtok(richiesta, "|");
   resto_richiesta = strtok(NULL, "");
@@ -384,11 +413,11 @@ void gestisci_richiesta_client(char *richiesta, char *risposta){
   }else if (cod_comando == ALLSTANZE){
     richiesta_all_stanze(resto_richiesta, risposta);
   }else if(cod_comando == INVIAMESS){
-    richiesta_invia_messaggio(resto_richiesta, risposta);
+    richiesta_invia_messaggio(resto_richiesta, risposta, socket_fd);
   }else if(cod_comando == ACCETTARIC){
     richiesta_accetta_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == APRICHAT){
-    richiesta_apri_chat(resto_richiesta, risposta);
+    richiesta_apri_chat(resto_richiesta, risposta, socket_fd);
   }else if(cod_comando == ELIMINAUSER){
     richiesta_elimina_utente(resto_richiesta, risposta);
   }else if(cod_comando == ELIMINASTANZA){
@@ -409,5 +438,9 @@ void gestisci_richiesta_client(char *richiesta, char *risposta){
     richiesta_verifica_admin(resto_richiesta, risposta);
   }else if(cod_comando == VEDIPART){
     richiesta_vedi_partecipanti(resto_richiesta, risposta);
+  }else if(cod_comando == LEAVECHAT){
+    richiesta_leave_chat(resto_richiesta, risposta);
   }
+  
+  return cod_comando;
 }

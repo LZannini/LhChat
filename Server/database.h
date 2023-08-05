@@ -2,12 +2,12 @@
 #define DATABASE_H
 
 #include <libpq-fe.h>
-#define CONN_STRING "user=postgres dbname=lhchat"
+#define CONN_STRING "user=postgres dbname=LhChat"
 
 PGconn *connetti(char *connstring);
 void disconnetti(PGconn *conn);
 PGresult *select_stanze_utente(char *username);
-PGresult *select_stanze();
+PGresult *select_stanze(char *username);
 PGresult *select_messaggi_stanza(int id_stanza);
 PGresult *select_richieste_stanza(int id_stanza);
 PGresult *select_partecipanti(int id_stanza);

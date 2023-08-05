@@ -1,5 +1,6 @@
 package com.example.multichat.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,14 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull RoomsAdapter.ViewHolder holder, int position) {
         Stanza item = stanze.get(position);
         holder.textView.setText(item.getNome_stanza());
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onStanzaListener != null) {
+                    onStanzaListener.onStanzaClick(position);
+                }
+            }
+        });
     }
 
 

@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/white"
         android:textSize="20dp"
+        android:paddingStart="53dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +71,7 @@
         android:fontFamily="sans-serif-medium"
         android:textColor="@color/white"
         android:textSize="20dp"
+        android:paddingStart="16dp"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:ignore="MissingConstraints" />

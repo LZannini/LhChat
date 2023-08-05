@@ -47,14 +47,14 @@ PGresult *select_stanze_utente(char *username){
     return res;
 }
 
-PGresult *select_stanze(){
+PGresult *select_stanze(char *username){
     PGconn *conn = connetti(CONN_STRING);;
     PGresult *res;
     char query[1024], error[1024];
 
     if(conn != NULL)
     {
-        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza");
+        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza where id_stanza not in (select id_stanza from appartenenza_stanza where username = $$%s$$)", username);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
@@ -465,7 +465,7 @@ PGresult *check_if_stanza_esiste(char *nome_stanza){
     char query[1024], error[1024];
 
     if(conn != NULL){
-        sprintf(query, "select * from stanza WHERE nome_stanza LIKE $$%s$$", nome_stanza);
+        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza WHERE nome_stanza LIKE $$%s%$$", nome_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){

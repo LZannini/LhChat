@@ -13,7 +13,7 @@
     tools:context=".CreastanzaActivity">
 
     <EditText
-        android:id="@+id/nomestanza"
+        android:id="@+id/stanzacercata"
         android:layout_width="352dp"
         android:layout_height="48dp"
         android:layout_marginTop="204dp"
@@ -23,6 +23,9 @@
         android:minHeight="48dp"
         android:selectAllOnFocus="true"
         android:textColor="@color/black"
+        android:maxLines="1"
+        android:inputType="text"
+        android:paddingStart="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomestanza"
+        app:layout_constraintTop_toBottomOf="@+id/stanzacercata"
         app:layout_constraintVertical_bias="0.2"
         tools:text="Crea Stanza" />
 
