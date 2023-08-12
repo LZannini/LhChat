@@ -19,10 +19,10 @@ int insert_messaggio(char *mittente, int id_stanza, time_t ora_invio, char *test
 int delete_utente(char *username);
 int delete_stanza(int id_stanza);
 int delete_appartenenza_stanza(char *username, int id_stanza);
+int remove_richiesta_stanza(char *username, int id_stanza);
 int update_password(char *username, char *nuova_pass);
 int update_username(char *username, char *nuovo_user);
 int check_if_registrato(char *username, char *password);
-PGresult *check_if_admin(char *username, int id_stanza);
 PGresult *check_if_stanza_esiste(char *nome_stanza);
 
 

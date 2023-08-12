@@ -436,28 +436,33 @@ int check_if_registrato(char *username, char *password){
     return val;
 }
 
-PGresult *check_if_admin(char *username, int id_stanza){
+int remove_richiesta_stanza(char *username, int id_stanza) {
     PGconn *conn = connetti(CONN_STRING);
     PGresult *res;
     char query[1024], error[1024];
+    int out = 0;
 
-    if(conn != NULL){
-        sprintf(query, "select * from stanza where nome_admin = $$%s$$ AND id_stanza = $$%d$$", username, id_stanza);
+    if (conn != NULL){
+        sprintf(query, "delete from richiesta_stanza where utente = $$%s$$ and id_stanza = $$%d$$", username, id_stanza);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
             printf("%s\n", error);
-            printf("DB: Errore nella ricerca dell'admin. \n");
-            PQclear(res);
-            res = NULL;
+            printf("DB: Errore nell'eliminazione della richiesta dal database. \n");
         }
+        else{
+            printf("DB: Richiesta eliminata dal database con successo.\n");
+            out = 1;
+        }
+        PQclear(res);
     }
     else
-        printf("DB: Errore! Connessione al database fallita. \n");
+        printf("DB: Errore! Connessione al database fallita.\n");
 
     disconnetti(conn);
-}
+    return out;
 
+}
 
 PGresult *check_if_stanza_esiste(char *nome_stanza){
     PGconn *conn = connetti(CONN_STRING);

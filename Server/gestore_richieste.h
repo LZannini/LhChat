@@ -20,7 +20,7 @@
 #define ESCIDASTANZA 14
 #define RICHIESTASTANZA 15
 #define VEDIRICHIESTE 16
-#define ADMIN 17
+#define RIFIUTARIC 17
 #define ALLSTANZE 18
 #define LEAVECHAT 19
 // comandi OK server
@@ -40,7 +40,7 @@
 #define ESCIDASTANZAOK 114
 #define RICHIESTASTANZAOK 115
 #define VEDIRICHIESTEOK 116
-#define ADMINSI 117
+#define RIFIUTARICOK 117
 #define ALLSTANZEOK 118
 #define LEAVECHATOK 119
 // comandi ERR server
@@ -60,7 +60,7 @@
 #define ESCIDASTANZAERR 214
 #define RICHIESTASTANZAERR 215
 #define VEDIRICHIESTEERR 216
-#define ADMINERR 217
+#define RIFIUTARICERR 217
 #define ALLSTANZEERR 218
 #define LEAVECHATERR 219
 // altri errori
@@ -70,7 +70,7 @@
 #define CHATVUOTA 306
 #define NOPART 311
 #define NORICHIESTE 316
-#define ADMINNO 317
+
 
 // funzioni per creare le risposte da inviare al client
 void produci_risposta_registrazione(const int comando, char *risposta, char *username);
@@ -89,8 +89,8 @@ void produci_risposta_up_password(const int comando, char *risposta);
 void produci_risposta_up_user(const int comando, char *risposta);
 void produci_risposta_ins_ric(const int comando, char *risposta);
 void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta);
-void produci_risposta_admin(const int comando, PGresult *res, char *risposta);
 void produci_risposta_partecipanti(const int comando, PGresult *res, char *risposta);
 void produci_risposta_leave_chat(const int comando, char *risposta);
+void produci_risposta_rimuovi_richiesta(const int comando, char *risposta);
 
 #endif

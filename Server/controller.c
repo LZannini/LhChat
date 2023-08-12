@@ -163,6 +163,26 @@ void richiesta_accetta_richiesta(char *richiesta, char *risposta){
   }
 }
 
+void richiesta_rifiuta_richiesta(char *richiesta, char *risposta){
+  int eliminato = 0;
+
+  char *id_stanza_str;
+  int id_stanza;
+  char *username;
+
+  id_stanza_str = strtok(richiesta, "|");
+  id_stanza = atoi(id_stanza_str);
+  username = strtok(NULL, "|");
+
+  eliminato = remove_richiesta_stanza(username, id_stanza);
+
+  if(eliminato == 0){
+    produci_risposta_rimuovi_richiesta(RIFIUTARICERR, risposta);
+  }else{
+    produci_risposta_rimuovi_richiesta(RIFIUTARICOK, risposta);
+  }
+}
+
 
 void richiesta_apri_chat(char *richiesta, char *risposta, int socket_fd){
   PGresult *mess_trovati;
@@ -330,30 +350,10 @@ void richiesta_visualizza_richieste(char *richiesta, char *risposta){
   }else if(PQntuples(richieste_trovate) == 0){
     produci_risposta_vedi_ric(NORICHIESTE, richieste_trovate, risposta);
   }else{
-    produci_risposta_vedi_ric(VEDIRICHIESTE, richieste_trovate, risposta);
+    produci_risposta_vedi_ric(VEDIRICHIESTEOK, richieste_trovate, risposta);
   }
 }
 
-void richiesta_verifica_admin(char *richiesta, char *risposta){
-  PGresult *admin_trovato;
-
-  char *username;
-  char *id_stanza_str;
-  int id_stanza;
-
-  username = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
-  id_stanza = atoi(id_stanza_str);
-
-  admin_trovato = check_if_admin(username, id_stanza);
-  if(admin_trovato == NULL){
-    produci_risposta_admin(ADMINERR, admin_trovato, risposta);
-  }else if(PQntuples(admin_trovato) == 0){
-    produci_risposta_admin(ADMINNO, admin_trovato, risposta);
-  }else{
-    produci_risposta_admin(ADMINSI, admin_trovato, risposta);
-  }
-}
 
 void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
   PGresult *partecipanti;
@@ -434,8 +434,8 @@ int gestisci_richiesta_client(char *richiesta, char *risposta, int socket_fd){
     richiesta_inserisci_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == VEDIRICHIESTE){
     richiesta_visualizza_richieste(resto_richiesta, risposta);
-  }else if(cod_comando == ADMIN){
-    richiesta_verifica_admin(resto_richiesta, risposta);
+  }else if(cod_comando == RIFIUTARIC){
+    richiesta_rifiuta_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == VEDIPART){
     richiesta_vedi_partecipanti(resto_richiesta, risposta);
   }else if(cod_comando == LEAVECHAT){
