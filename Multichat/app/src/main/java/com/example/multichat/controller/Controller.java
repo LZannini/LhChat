@@ -40,7 +40,7 @@ public class Controller {
     public static final String ESCIDASTANZA = "014";
     public static final String RICHIESTASTANZA = "015";
     public static final String VEDIRICHIESTE = "016";
-    public static final String ADMIN = "017";
+    public static final String RIFIUTARIC = "017";
     public static final String ALLSTANZE = "018";
     public static final String LEAVECHAT = "019";
 
@@ -61,7 +61,7 @@ public class Controller {
     public static final String ESCIDASTANZAOK = "114";
     public static final String RICHIESTASTANZAOK = "115";
     public static final String VEDIRICHIESTEOK = "116";
-    public static final String ADMINSI = "117";
+    public static final String RIFIUTARICOK = "117";
     public static final String ALLSTANZEOK = "118";
     public static final String LEAVECHATOK = "119";
 
@@ -82,7 +82,7 @@ public class Controller {
     public static final String ESCIDASTANZAERR = "214";
     public static final String RICHIESTASTANZAERR = "215";
     public static final String VEDIRICHIESTEERR = "216";
-    public static final String ADMINERR = "217";
+    public static final String RIFIUTARICERR = "217";
     public static final String ALLSTANZEERR = "218";
     public static final String LEAVECHATERR = "219";
 
@@ -94,7 +94,6 @@ public class Controller {
     public static final String NOPART = "311";
     public static final String RICHIESTAGIAINVIATA = "315";
     public static final String NORICHIESTE = "316";
-    public static final String ADMINNO = "317";
 
 
     private Socket socket;
@@ -107,7 +106,7 @@ public class Controller {
     private String risposta;
 
     public static final int SERVERPORT = 5000;
-    public static final String SERVER_IP = "192.168.178.107";
+    public static final String SERVER_IP = "192.168.178.116";
 
     public Controller() {
     }
@@ -548,6 +547,64 @@ public class Controller {
                     socket.close();
                 } catch (Exception e) {
                     System.out.println("Richiesta s'accesso non riuscita, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
+    public int accetta_richiesta(int id_stanza, String username) throws Exception {
+        String richiesta = ACCETTARIC + "|"  + id_stanza + "|" + username;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Errore durante l'operazione di accettazione, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return codComando;
+    }
+
+    public int rifiuta_richiesta(int id_stanza, String username) throws Exception {
+        String richiesta = RIFIUTARIC + "|"  + id_stanza + "|" + username;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    String[] dati = risposta.split("\\|");
+                    codComando = Integer.parseInt(dati[0]);
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Errore durante l'operazione di rifiuto, socket chiusa");
                 }
             }
         });

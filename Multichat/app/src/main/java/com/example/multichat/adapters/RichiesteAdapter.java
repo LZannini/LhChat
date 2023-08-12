@@ -14,20 +14,20 @@ import com.example.multichat.model.Richiesta_stanza;
 
 import java.util.ArrayList;
 
-public abstract class RichiesteAdapter extends RecyclerView.Adapter<RichiesteAdapter.ViewHolder> {
+public class RichiesteAdapter extends RecyclerView.Adapter<RichiesteAdapter.ViewHolder> {
     private ArrayList<Richiesta_stanza> richieste = new ArrayList<>();
-    private RichiesteAdapter.OnUtenteListener onUtenteListener;
+    private OnUtenteListener onUtenteListener;
 
-    public RichiesteAdapter(ArrayList<Richiesta_stanza> richieste, VediRichiesteActivity onUtenteListener){
+    public RichiesteAdapter(ArrayList<Richiesta_stanza> richieste, RichiesteAdapter.OnUtenteListener onUtenteListener){
         this.richieste = richieste;
         this.onUtenteListener = (OnUtenteListener) onUtenteListener;
     }
 
     @NonNull
     @Override
-    public RichiesteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_partecipanti, parent, false);
-        return new RichiesteAdapter.ViewHolder(view, (RichiesteAdapter.OnUtenteListener) onUtenteListener);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_richiesta, parent, false);
+        return new ViewHolder(view, onUtenteListener);
     }
 
     @Override
@@ -41,8 +41,6 @@ public abstract class RichiesteAdapter extends RecyclerView.Adapter<RichiesteAda
     public int getItemCount() {
         return richieste.size();
     }
-
-    public abstract void onUtenteClick(int position);
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textView;
@@ -64,5 +62,12 @@ public abstract class RichiesteAdapter extends RecyclerView.Adapter<RichiesteAda
 
     public interface OnUtenteListener{
         void onUtenteClick(int position);
+    }
+
+    public void rimuoviRichiesta(int position) {
+        if (position >= 0 && position < richieste.size()) {
+            richieste.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 }
