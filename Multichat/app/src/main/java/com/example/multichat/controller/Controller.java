@@ -107,7 +107,7 @@ public class Controller {
     private String risposta;
 
     public static final int SERVERPORT = 5000;
-    public static final String SERVER_IP = "192.168.1.172";
+    public static final String SERVER_IP = "192.168.178.107";
 
     public Controller() {
     }
@@ -358,6 +358,34 @@ public class Controller {
 
     public String[] vediPartecipanti(int id_stanza) throws Exception {
         String richiesta = VEDIPART + "|" + id_stanza;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Socket socket = new Socket(SERVER_IP, SERVERPORT);
+                    InputStream inputStream = socket.getInputStream();
+                    OutputStream outputStream = socket.getOutputStream();
+                    // Invio i dati
+                    outputStream.write(richiesta.getBytes());
+                    outputStream.flush();
+                    // Ricezione risposta
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = inputStream.read(buffer);
+                    String risposta = new String(buffer, 0, bytesRead);
+                    dati = risposta.split("\\|");
+                    socket.close();
+                } catch (Exception e) {
+                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                }
+            }
+        });
+        t.start(); // Avvio del thread
+        t.join(); // Attendo la terminazione del thread
+        return dati;
+    }
+
+    public String[] vediRichieste(int id_stanza) throws Exception {
+        String richiesta = VEDIRICHIESTE + "|" + id_stanza;
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {

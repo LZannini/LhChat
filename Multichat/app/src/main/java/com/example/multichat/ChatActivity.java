@@ -57,6 +57,7 @@ public class ChatActivity extends AppCompatActivity {
     private volatile String notifica;
     private volatile Boolean connectionClosed = true;
     private Thread t;
+    private String nome_admin;
 
 
     @Override
@@ -71,6 +72,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String nome_stanza = intent.getStringExtra("nome_stanza");
+        nome_admin =intent.getStringExtra("nome_admin");
         controller = new Controller();
 
         ActionBar actionBar = getSupportActionBar();
@@ -265,6 +267,21 @@ public class ChatActivity extends AppCompatActivity {
                         })
                         .show();
                 return true;
+            case R.id.item3:
+                if(nome_admin.equals(controller.getUtente().getUsername())) {
+                    openActivityVediRichieste();
+                } else {
+                    System.out.println("nome_admin: "+nome_admin+"controller.bla.bla: "+controller.getUtente().getUsername());
+                    builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Solo l'admin può controllare se ci sono nuove richieste.")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             default:
                 try {
                     connectionClosed = true;
@@ -286,6 +303,11 @@ public class ChatActivity extends AppCompatActivity {
 
     public void openActivityHome(){
         Intent intentH = new Intent(this, HomeActivity.class);
+        startActivity(intentH);
+    }
+
+    public void openActivityVediRichieste(){
+        Intent intentH = new Intent(this, VediRichiesteActivity.class);
         startActivity(intentH);
     }
 
