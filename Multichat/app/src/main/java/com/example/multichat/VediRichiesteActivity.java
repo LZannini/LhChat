@@ -110,6 +110,7 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
+                                                openActivityVediRichieste();
                                             }
                                         });
                                 android.app.AlertDialog alert = builder.create();
@@ -143,6 +144,7 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
+                                                openActivityVediRichieste();
                                             }
                                         });
                                 android.app.AlertDialog alert = builder.create();
@@ -173,5 +175,9 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
         builder.show();
     }
 
-
+    public void openActivityVediRichieste(){
+        Intent intentH = new Intent(this, VediRichiesteActivity.class);
+        intentH.putExtra("room_id", id_stanza);
+        startActivity(intentH);
+    }
 }

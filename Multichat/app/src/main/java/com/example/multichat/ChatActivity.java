@@ -178,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
                     while (!connectionClosed) {
                         System.out.println("La connessione è ancora aperta.");
                         InputStream inputStream = socket.getInputStream();
-                        byte[] buffer = new byte[1024];
+                        byte[] buffer = new byte[2048];
                         int bytesRead = inputStream.read(buffer);
                         if (bytesRead == -1) {
                             System.out.println("La connessione è stata chiusa");
