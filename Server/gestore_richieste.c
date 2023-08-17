@@ -122,14 +122,6 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
   }
 }
 
-void produci_risposta_elimina_utente(const int comando, char *risposta){
-  if(comando == ELIMINAUSEROK){
-    sprintf(risposta, "%d|Utente eliminato con successo", comando);
-  }else if(comando == ELIMINAUSERERR){
-    sprintf(risposta, "%d|Errore durante l'eliminazione dell'utente", comando);
-  }
-}
-
 void produci_risposta_elimina_stanza(const int comando, char *risposta){
   if(comando == ELIMINASTANZAOK){
     sprintf(risposta, "%d|Stanza eliminata con successo", comando);
@@ -177,14 +169,6 @@ void produci_risposta_up_password(const int comando, char *risposta){
   }
 }
 
-void produci_risposta_up_user(const int comando, char *risposta){
-  if(comando == MODUSEROK){
-    sprintf(risposta, "%d|Username modificata con successo", comando);
-  }else if(comando == MODUSERERR){
-    sprintf(risposta, "%d|Errore durante la modifica dell' username", comando);
-  }
-}
-
 void produci_risposta_ins_ric(const int comando, char *risposta){
   if(comando == RICHIESTASTANZAOK){
     sprintf(risposta, "%d|Richiesta effettuata con successo", comando);
@@ -199,6 +183,7 @@ void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta)
     int i;
     char *tuple = malloc(sizeof(char) *1000);
 
+    tuple[0] = '\0';
     for(i=0; i<righe; i++){
       sprintf(tuple + strlen(tuple), "|%s", PQgetvalue(res, i, 0));
     }
@@ -212,15 +197,6 @@ void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta)
   }
 }
 
-void produci_risposta_admin(const int comando, PGresult *res, char *risposta){
-  if(comando == ADMINSI){
-    sprintf(risposta, "%d|Admin trovato", comando);
-  }else if(comando == ADMINNO){
-    sprintf(risposta, "%d|Admin non trovato", comando);
-  }else if(comando == ADMINERR){
-    sprintf(risposta, "%d|Errore durante la ricerca dell'admin", comando);
-  }
-}
 
 void produci_risposta_partecipanti(const int comando, PGresult *res, char *risposta){
   if(comando == VEDIPARTOK){
@@ -247,5 +223,13 @@ void produci_risposta_leave_chat(const int comando, char *risposta){
 		sprintf(risposta, "%d|Connessione chiusa nel server", comando);
 	} else {
 		sprintf(risposta, "%d|Errore durante la chiusura della connessione", comando);
+	}
+}
+
+void produci_risposta_rimuovi_richiesta(const int comando, char *risposta) {
+	if(comando == RIFIUTARICOK){
+		sprintf(risposta, "%d|Richiesta rifiutata con successo", comando);
+	} else {
+		sprintf(risposta, "%d|Errore durante l'operazione di rifiuto della richiesta", comando);
 	}
 }

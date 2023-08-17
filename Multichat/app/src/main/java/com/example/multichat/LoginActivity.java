@@ -63,6 +63,21 @@ public class LoginActivity extends AppCompatActivity {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
+                if (username.length() == 0 || password.length() == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage("Bisogna riempire tutti i campi!")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
+                    return;
+                }
+
                 try {
                     codComando = controller.login(username, password);
                 } catch (Exception e) {
@@ -93,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
                 } else if (codComando == Integer.parseInt(LOGINNONTROVATO)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setMessage("Username e/o password errati, riprova.")
@@ -103,6 +120,8 @@ public class LoginActivity extends AppCompatActivity {
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
                 }
             }
         });

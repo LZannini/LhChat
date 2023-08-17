@@ -12,31 +12,17 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".CercastanzaActivity">
 
-    <ImageView
-        android:id="@+id/imageView_lhchat3"
-        android:layout_width="211dp"
-        android:layout_height="34dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="-12dp"
-        android:layout_marginTop="152dp"
-        android:contentDescription="TODO"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.056"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/icon_roomslist" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="375dp"
-        android:layout_height="520dp"
+        android:layout_width="380dp"
+        android:layout_height="560dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_search"
-        app:layout_constraintVertical_bias="0.603" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_search" />
+
 
     <TextView
         android:id="@+id/errorTextViewAllRooms"

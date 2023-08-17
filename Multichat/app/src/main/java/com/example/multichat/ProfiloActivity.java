@@ -1,8 +1,5 @@
 package com.example.multichat;
 
-import static com.example.multichat.controller.Controller.ELIMINAUSERERR;
-import static com.example.multichat.controller.Controller.ELIMINAUSEROK;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,8 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +19,9 @@ import com.example.multichat.controller.Controller;
 
 public class ProfiloActivity extends AppCompatActivity {
 
+    private Button btnPw;
+    private Button btnLg;
+    private int count;
     private AlertDialog.Builder builder;
     private int codComando;
 
@@ -36,71 +35,20 @@ public class ProfiloActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         Controller controller = new Controller();
 
-        TextView textViewUsername = (TextView) findViewById(R.id.tv_username);
-        TextView textViewPassword = (TextView) findViewById(R.id.tv_password);
-        textViewUsername.setText(controller.getUtente().getUsername());
-        textViewPassword.setText(controller.getUtente().getPassword());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_profilo, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.item1:
-                openActivityModificaUsername();
-                return true;
-            case R.id.item2:
+        btnPw = (Button) findViewById(R.id.editProfileButton);
+        btnPw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 openActivityModificaPassword();
-                return true;
-            case R.id.item3:
-                builder = new AlertDialog.Builder(this);
-                builder.setMessage("Vuoi davvero eliminare il tuo profilo?")
-                        .setCancelable(true)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Controller controller = new Controller();
-                                try {
-                                    codComando = controller.eliminaUtente(controller.getUtente().getUsername());
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+            }
+        });
 
-                                if (codComando == Integer.parseInt(ELIMINAUSEROK)) {
-                                    Context ctx = getApplicationContext();
-                                    PackageManager pm = ctx.getPackageManager();
-                                    Intent intent = pm.getLaunchIntentForPackage(ctx.getPackageName());
-                                    Intent mainIntent = Intent.makeRestartActivityTask(intent.getComponent());
-                                    ctx.startActivity(mainIntent);
-                                    Runtime.getRuntime().exit(0);
-                                }
-                                else if (codComando == Integer.parseInt(ELIMINAUSERERR)){
-                                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProfiloActivity.this);
-                                    builder.setMessage("Errore durante l'eliminazione dell'utente, riprova.")
-                                            .setCancelable(false)
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                }
-                                            });
-                                    android.app.AlertDialog alert = builder.create();
-                                    alert.show();
-                                }
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        })
-                        .show();
-                return true;
-            case R.id.item4:
-                builder = new AlertDialog.Builder(this);
-                builder.setMessage("Sei sicuro di voler uscire?")
+        btnLg = (Button) findViewById(R.id.logoutButton);
+        btnLg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder = new AlertDialog.Builder(ProfiloActivity.this);
+                 builder.setMessage("Sei sicuro di voler disconnetterti?")
                         .setCancelable(true)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -117,17 +65,32 @@ public class ProfiloActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) { }
                         })
                         .show();
-                return true;
-            default:
-                openActivityHome();
-                return true;
-        }
+            }
+        });
 
+        TextView textViewUsername = (TextView) findViewById(R.id.username);
+        textViewUsername.setText(controller.getUtente().getUsername());
+        TextView textViewPassword = (TextView) findViewById(R.id.password);
+        textViewPassword.setText(controller.getUtente().getPassword());
+        textViewPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        count = 0;
+        textViewPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                count++;
+                if (count % 2 == 0)
+                    textViewPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) ;
+                else
+                    textViewPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            }
+        });
     }
 
-    public void openActivityModificaUsername(){
-        Intent intentMU = new Intent(this, ModificaUsernameActivity.class);
-        startActivity(intentMU);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), HomeActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
     }
 
     public void openActivityModificaPassword(){

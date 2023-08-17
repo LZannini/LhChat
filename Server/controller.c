@@ -163,6 +163,26 @@ void richiesta_accetta_richiesta(char *richiesta, char *risposta){
   }
 }
 
+void richiesta_rifiuta_richiesta(char *richiesta, char *risposta){
+  int eliminato = 0;
+
+  char *id_stanza_str;
+  int id_stanza;
+  char *username;
+
+  id_stanza_str = strtok(richiesta, "|");
+  id_stanza = atoi(id_stanza_str);
+  username = strtok(NULL, "|");
+
+  eliminato = remove_richiesta_stanza(username, id_stanza);
+
+  if(eliminato == 0){
+    produci_risposta_rimuovi_richiesta(RIFIUTARICERR, risposta);
+  }else{
+    produci_risposta_rimuovi_richiesta(RIFIUTARICOK, risposta);
+  }
+}
+
 
 void richiesta_apri_chat(char *richiesta, char *risposta, int socket_fd){
   PGresult *mess_trovati;
@@ -189,23 +209,6 @@ void richiesta_apri_chat(char *richiesta, char *risposta, int socket_fd){
     aggiungiUtente(socket_fd, id_stanza, username);
   }
 }
-
-
-void richiesta_elimina_utente(char *richiesta, char *risposta){
-  int eliminato = 0;
-
-  char *username;
-
-  username = strtok(richiesta,"|");
-
-  eliminato = delete_utente(username);
-  if(eliminato == 0){
-    produci_risposta_elimina_utente(ELIMINAUSERERR, risposta);
-  }else{
-    produci_risposta_elimina_utente(ELIMINAUSEROK, risposta);
-  }
-}
-
 
 void richiesta_elimina_stanza(char *richiesta, char *risposta){
   int eliminato = 0;
@@ -249,10 +252,12 @@ void richiesta_cerca_stanza(char *richiesta, char *risposta){
   PGresult *stanze_trovate;
 
   char *nome_stanza;
+  char *username;
 
   nome_stanza = strtok(richiesta, "|");
+  username = strtok(NULL, "|");
 
-  stanze_trovate = check_if_stanza_esiste(nome_stanza);
+  stanze_trovate = check_if_stanza_esiste(nome_stanza, username);
   if(stanze_trovate == NULL){
     produci_risposta_cerca_stanze(CERCASTANZAERR, stanze_trovate, risposta);
   }else if(PQntuples(stanze_trovate) == 0){
@@ -276,23 +281,6 @@ void richiesta_modifica_password(char *richiesta, char *risposta){
     produci_risposta_up_password(MODPASSERR, risposta);
   }else if(modificata == 1){
     produci_risposta_up_password(MODPASSOK, risposta);
-  }
-}
-
-void richiesta_modifica_username(char *richiesta, char *risposta){
-  int modificato = 0;
-
-  char *username;
-  char *nuovo_user;
-
-  username = strtok(richiesta, "|");
-  nuovo_user = strtok(NULL, "|");
-
-  modificato = update_username(username, nuovo_user);
-  if(modificato == 0){
-    produci_risposta_up_user(MODUSERERR, risposta);
-  }else if(modificato == 1){
-    produci_risposta_up_user(MODUSEROK, risposta);
   }
 }
 
@@ -330,30 +318,10 @@ void richiesta_visualizza_richieste(char *richiesta, char *risposta){
   }else if(PQntuples(richieste_trovate) == 0){
     produci_risposta_vedi_ric(NORICHIESTE, richieste_trovate, risposta);
   }else{
-    produci_risposta_vedi_ric(VEDIRICHIESTE, richieste_trovate, risposta);
+    produci_risposta_vedi_ric(VEDIRICHIESTEOK, richieste_trovate, risposta);
   }
 }
 
-void richiesta_verifica_admin(char *richiesta, char *risposta){
-  PGresult *admin_trovato;
-
-  char *username;
-  char *id_stanza_str;
-  int id_stanza;
-
-  username = strtok(richiesta, "|");
-  id_stanza_str = strtok(NULL, "|");
-  id_stanza = atoi(id_stanza_str);
-
-  admin_trovato = check_if_admin(username, id_stanza);
-  if(admin_trovato == NULL){
-    produci_risposta_admin(ADMINERR, admin_trovato, risposta);
-  }else if(PQntuples(admin_trovato) == 0){
-    produci_risposta_admin(ADMINNO, admin_trovato, risposta);
-  }else{
-    produci_risposta_admin(ADMINSI, admin_trovato, risposta);
-  }
-}
 
 void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
   PGresult *partecipanti;
@@ -418,8 +386,6 @@ int gestisci_richiesta_client(char *richiesta, char *risposta, int socket_fd){
     richiesta_accetta_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == APRICHAT){
     richiesta_apri_chat(resto_richiesta, risposta, socket_fd);
-  }else if(cod_comando == ELIMINAUSER){
-    richiesta_elimina_utente(resto_richiesta, risposta);
   }else if(cod_comando == ELIMINASTANZA){
     richiesta_elimina_stanza(resto_richiesta, risposta);
   }else if(cod_comando == ESCIDASTANZA){
@@ -428,14 +394,12 @@ int gestisci_richiesta_client(char *richiesta, char *risposta, int socket_fd){
     richiesta_cerca_stanza(resto_richiesta, risposta);
   }else if(cod_comando == MODPASS){
     richiesta_modifica_password(resto_richiesta, risposta);
-  }else if(cod_comando == MODUSER){
-    richiesta_modifica_username(resto_richiesta, risposta);
   }else if(cod_comando == RICHIESTASTANZA){
     richiesta_inserisci_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == VEDIRICHIESTE){
     richiesta_visualizza_richieste(resto_richiesta, risposta);
-  }else if(cod_comando == ADMIN){
-    richiesta_verifica_admin(resto_richiesta, risposta);
+  }else if(cod_comando == RIFIUTARIC){
+    richiesta_rifiuta_richiesta(resto_richiesta, risposta);
   }else if(cod_comando == VEDIPART){
     richiesta_vedi_partecipanti(resto_richiesta, risposta);
   }else if(cod_comando == LEAVECHAT){

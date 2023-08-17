@@ -60,6 +60,19 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
             @Override
             public void onClick(View view) {
                 nome_stanza = stanza_cercata.getText().toString();
+
+                if (nome_stanza.length() == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CercastanzaActivity.this);
+                    builder.setMessage("Non hai digitato alcuna stanza!")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    return;
+                }
                 openActivityStanzeTrovate();
             }
         });

@@ -164,6 +164,7 @@ public class HomeActivity extends AppCompatActivity implements RoomsAdapter.OnSt
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("nome_stanza", lista_stanze.get(position).getNome_stanza());
         intent.putExtra("room_id", lista_stanze.get(position).getId_stanza());
+        intent.putExtra("nome_admin", lista_stanze.get(position).getNome_admin());
         startActivity(intent);
     }
 

@@ -12,15 +12,13 @@
 #define APRICHAT 6
 #define ACCETTARIC 7
 #define MODPASS 8
-#define MODUSER 9
 #define VEDISTANZE 10
 #define VEDIPART 11
-#define ELIMINAUSER 12
 #define ELIMINASTANZA 13
 #define ESCIDASTANZA 14
 #define RICHIESTASTANZA 15
 #define VEDIRICHIESTE 16
-#define ADMIN 17
+#define RIFIUTARIC 17
 #define ALLSTANZE 18
 #define LEAVECHAT 19
 // comandi OK server
@@ -32,15 +30,13 @@
 #define APRICHATOK 106
 #define ACCETTARICOK 107
 #define MODPASSOK 108
-#define MODUSEROK 109
 #define VEDISTANZEOK 110
 #define VEDIPARTOK 111
-#define ELIMINAUSEROK 112
 #define ELIMINASTANZAOK 113
 #define ESCIDASTANZAOK 114
 #define RICHIESTASTANZAOK 115
 #define VEDIRICHIESTEOK 116
-#define ADMINSI 117
+#define RIFIUTARICOK 117
 #define ALLSTANZEOK 118
 #define LEAVECHATOK 119
 // comandi ERR server
@@ -52,15 +48,13 @@
 #define APRICHATERR 206
 #define ACCETTARICERR 207
 #define MODPASSERR 208
-#define MODUSERERR 209
 #define VEDISTANZEERR 210
 #define VEDIPARTERR 211
-#define ELIMINAUSERERR 212
 #define ELIMINASTANZAERR 213
 #define ESCIDASTANZAERR 214
 #define RICHIESTASTANZAERR 215
 #define VEDIRICHIESTEERR 216
-#define ADMINERR 217
+#define RIFIUTARICERR 217
 #define ALLSTANZEERR 218
 #define LEAVECHATERR 219
 // altri errori
@@ -70,7 +64,7 @@
 #define CHATVUOTA 306
 #define NOPART 311
 #define NORICHIESTE 316
-#define ADMINNO 317
+
 
 // funzioni per creare le risposte da inviare al client
 void produci_risposta_registrazione(const int comando, char *risposta, char *username);
@@ -81,16 +75,14 @@ void produci_risposta_all_stanze(const int comando, PGresult *res, char *rispost
 void produci_risposta_new_membro(const int comando, char *risposta);
 void produci_risposta_ins_mess(const int comando, char *risposta);
 void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta);
-void produci_risposta_elimina_utente(const int comando, char *risposta);
 void produci_risposta_elimina_stanza(const int comando, char *risposta);
 void produci_risposta_abbandona_stanza(const int comando, char *risposta);
 void produci_risposta_cerca_stanze(const int comando, PGresult *res, char *risposta);
 void produci_risposta_up_password(const int comando, char *risposta);
-void produci_risposta_up_user(const int comando, char *risposta);
 void produci_risposta_ins_ric(const int comando, char *risposta);
 void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta);
-void produci_risposta_admin(const int comando, PGresult *res, char *risposta);
 void produci_risposta_partecipanti(const int comando, PGresult *res, char *risposta);
 void produci_risposta_leave_chat(const int comando, char *risposta);
+void produci_risposta_rimuovi_richiesta(const int comando, char *risposta);
 
 #endif

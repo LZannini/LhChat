@@ -48,6 +48,21 @@ public class RegistrazioneActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(RegistrazioneActivity.this);
 
+                if (username.length() == 0 || password.length() == 0 || confPass.length() == 0) {
+                    builder.setMessage("Bisogna riempire tutti i campi!")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
+                    confPassEditText.setText("");
+                    return;
+                }
+
                 if (password.equals(confPass)) {
                     try {
                         codComando = controller.registrazione(username, password);
@@ -68,7 +83,7 @@ public class RegistrazioneActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }else if(codComando == Integer.parseInt(controller.REGERR)) {
-                        builder.setMessage("Errore durante la fase di registrazione!")
+                        builder.setMessage("Errore durante la fase di registrazione, riprova!")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -76,6 +91,9 @@ public class RegistrazioneActivity extends AppCompatActivity {
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
+                        usernameEditText.setText("");
+                        passwordEditText.setText("");
+                        confPassEditText.setText("");
                     }else if(codComando == Integer.parseInt(controller.GIAREGISTRATO)) {
                         builder.setMessage("Questo utente risulta già registrato, effettua il login!")
                                 .setCancelable(false)
@@ -92,11 +110,13 @@ public class RegistrazioneActivity extends AppCompatActivity {
                             .setCancelable(false)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    openActivityRegistrazione();
                                 }
                             });
                     AlertDialog alert = builder.create();
                     alert.show();
+                    usernameEditText.setText("");
+                    passwordEditText.setText("");
+                    confPassEditText.setText("");
                 }
             }
         });
