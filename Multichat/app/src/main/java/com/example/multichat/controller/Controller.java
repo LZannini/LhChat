@@ -34,13 +34,12 @@ public class Controller {
     public static final String MODPASS = "008";
     public static final String VEDISTANZE = "010";
     public static final String VEDIPART = "011";
-    public static final String ELIMINASTANZA = "013";
+    public static final String LEAVECHAT = "012";
+    public static final String ALLSTANZE = "013";
     public static final String ESCIDASTANZA = "014";
     public static final String RICHIESTASTANZA = "015";
     public static final String VEDIRICHIESTE = "016";
     public static final String RIFIUTARIC = "017";
-    public static final String ALLSTANZE = "018";
-    public static final String LEAVECHAT = "019";
 
     //comandi OK
     public static final String LOGINOK = "101";
@@ -53,13 +52,12 @@ public class Controller {
     public static final String MODPASSOK = "108";
     public static final String VEDISTANZEOK = "110";
     public static final String VEDIPARTOK = "111";
-    public static final String ELIMINASTANZAOK = "113";
+    public static final String LEAVECHATOK = "112";
+    public static final String ALLSTANZEOK = "113";
     public static final String ESCIDASTANZAOK = "114";
     public static final String RICHIESTASTANZAOK = "115";
     public static final String VEDIRICHIESTEOK = "116";
     public static final String RIFIUTARICOK = "117";
-    public static final String ALLSTANZEOK = "118";
-    public static final String LEAVECHATOK = "119";
 
     //comandi ERR
     public static final String LOGINERR = "201";
@@ -72,22 +70,19 @@ public class Controller {
     public static final String MODPASSERR = "208";
     public static final String VEDISTANZEERR = "210";
     public static final String VEDIPARTERR = "211";
-    public static final String ELIMINASTANZAERR = "213";
+    public static final String LEAVECHATERR = "212";
+    public static final String ALLSTANZEERR = "213";
     public static final String ESCIDASTANZAERR = "214";
     public static final String RICHIESTASTANZAERR = "215";
     public static final String VEDIRICHIESTEERR = "216";
     public static final String RIFIUTARICERR = "217";
-    public static final String ALLSTANZEERR = "218";
-    public static final String LEAVECHATERR = "219";
 
     //altri comandi
     public static final String LOGINNONTROVATO = "301";
     public static final String GIAREGISTRATO = "302";
     public static final String CHATVUOTA = "306";
     public static final String STANZENONTROVATE = "310";
-    public static final String NOPART = "311";
     public static final String RICHIESTAGIAINVIATA = "315";
-    public static final String NORICHIESTE = "316";
 
 
     private Socket socket;
@@ -100,7 +95,7 @@ public class Controller {
     private String risposta;
 
     public static final int SERVERPORT = 5000;
-    public static final String SERVER_IP = "192.168.1.172";
+    public static final String SERVER_IP = "192.168.178.116";
 
     public Controller() {
     }
@@ -178,7 +173,6 @@ public class Controller {
 
     public int creaStanza(String nome_stanza) throws Exception{
         String richiesta = CREASTANZA + "|" + nome_stanza + "|" + u.getUsername();
-        System.out.println(richiesta);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -364,7 +358,6 @@ public class Controller {
                     int bytesRead = inputStream.read(buffer);
                     String risposta = new String(buffer, 0, bytesRead);
                     dati = risposta.split("\\|");
-                    System.out.println(""+dati[1]);
                     u.setCurrentChatConnection(socket);
                 } catch (Exception e) {
                     System.out.println("Apertura chat non riuscita, socket chiusa");
