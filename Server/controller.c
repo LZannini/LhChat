@@ -205,23 +205,6 @@ void richiesta_apri_chat(char *richiesta, char *risposta, int socket_fd){
 	}
 }
 
-void richiesta_elimina_stanza(char *richiesta, char *risposta){
-	int eliminato = 0;
-
-	char *id_stanza_str;
-	int id_stanza;
-
-	id_stanza_str = strtok(richiesta,"|");
-
-	id_stanza = atoi(id_stanza_str);
-
-	eliminato = delete_stanza(id_stanza);
-	if(eliminato == 0){
-		produci_risposta_elimina_stanza(ELIMINASTANZAERR, risposta);
-	}else{
-		produci_risposta_elimina_stanza(ELIMINASTANZAOK, risposta);
-	}
-}
 
 void richiesta_abbandona_stanza(char *richiesta, char *risposta){
 	int eliminato = 0;
@@ -310,8 +293,6 @@ void richiesta_visualizza_richieste(char *richiesta, char *risposta){
 	richieste_trovate = select_richieste_stanza(id_stanza);
 	if(richieste_trovate == NULL){
 		produci_risposta_vedi_ric(VEDIRICHIESTEERR, richieste_trovate, risposta);
-	}else if(PQntuples(richieste_trovate) == 0){
-		produci_risposta_vedi_ric(NORICHIESTE, richieste_trovate, risposta);
 	}else{
 		produci_risposta_vedi_ric(VEDIRICHIESTEOK, richieste_trovate, risposta);
 	}
@@ -330,8 +311,6 @@ void richiesta_vedi_partecipanti(char *richiesta, char *risposta){
 	partecipanti = select_partecipanti(id_stanza);
 	if(partecipanti == NULL){
 		produci_risposta_partecipanti(VEDIPARTERR, partecipanti, risposta);
-	}else if(PQntuples(partecipanti) == 0){
-		produci_risposta_partecipanti(NOPART, partecipanti, risposta);
 	}else{
 		produci_risposta_partecipanti(VEDIPARTOK, partecipanti, risposta);
 	}
@@ -378,8 +357,6 @@ int gestisci_richiesta_client(char *richiesta, char *risposta, int socket_fd){
 		richiesta_accetta_richiesta(resto_richiesta, risposta);
 	}else if(cod_comando == APRICHAT){
 		richiesta_apri_chat(resto_richiesta, risposta, socket_fd);
-	}else if(cod_comando == ELIMINASTANZA){
-		richiesta_elimina_stanza(resto_richiesta, risposta);
 	}else if(cod_comando == ESCIDASTANZA){
 		richiesta_abbandona_stanza(resto_richiesta, risposta);
 	}else if(cod_comando == CERCASTANZA){

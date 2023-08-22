@@ -121,14 +121,6 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
     }
 }
 
-void produci_risposta_elimina_stanza(const int comando, char *risposta){
-    if(comando == ELIMINASTANZAOK){
-        sprintf(risposta, "%d|Stanza eliminata con successo", comando);
-    }else if(comando == ELIMINASTANZAERR){
-        sprintf(risposta, "%d|Errore durante l'eliminazione della stanza", comando);
-    }
-}
-
 void produci_risposta_abbandona_stanza(const int comando, char *risposta){
     if(comando == ESCIDASTANZAOK){
         sprintf(risposta, "%d|Abbandono della stanza avvenuto con successo", comando);
@@ -191,8 +183,6 @@ void produci_risposta_vedi_ric(const int comando, PGresult *res, char *risposta)
         free(tuple);
     }else if(comando == VEDIRICHIESTEERR){
         sprintf(risposta, "%d|Errore durante la visualizzazione delle richieste", comando);
-    }else if(comando == NORICHIESTE){
-        sprintf(risposta, "%d|Nessuna richiesta per entrare nella stanza", comando);
     }
 }
 
@@ -210,8 +200,6 @@ void produci_risposta_partecipanti(const int comando, PGresult *res, char *rispo
 
         sprintf(risposta, "%d%s", comando, tuple);
         free(tuple);
-    }else if(comando == NOPART){
-        sprintf(risposta, "%d|Nessun partecipante nella stanza", comando);
     }else if(comando == VEDIPARTERR){
         sprintf(risposta, "%d|Errore durante la ricerca dei partecipanti della stanza", comando);
     }

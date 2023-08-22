@@ -71,7 +71,6 @@ void produci_risposta_all_stanze(const int comando, PGresult *res, char *rispost
 void produci_risposta_new_membro(const int comando, char *risposta);
 void produci_risposta_ins_mess(const int comando, char *risposta);
 void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta);
-void produci_risposta_elimina_stanza(const int comando, char *risposta);
 void produci_risposta_abbandona_stanza(const int comando, char *risposta);
 void produci_risposta_cerca_stanze(const int comando, PGresult *res, char *risposta);
 void produci_risposta_up_password(const int comando, char *risposta);
