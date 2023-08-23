@@ -239,6 +239,18 @@ public class ChatActivity extends AppCompatActivity {
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Controller controller = new Controller();
+                                if (nome_admin.equals(controller.getUtente().getUsername())) {
+                                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ChatActivity.this);
+                                    builder.setMessage("L'admin non può abbandonare la stanza!")
+                                            .setCancelable(false)
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                }
+                                            });
+                                    android.app.AlertDialog alert = builder.create();
+                                    alert.show();
+                                    return;
+                                }
                                 try {
                                     codComando = controller.abbandonaStanza(roomId);
                                 } catch (InterruptedException e) {

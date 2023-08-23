@@ -22,9 +22,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Type your message"
+            android:hint="Scrivi il tuo messaggio"
             android:inputType="textMultiLine"
             android:maxLines="5"
+            android:minHeight="48dp"
             android:minLines="1"
             android:padding="8dp" />
 
@@ -51,7 +52,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/message_recyclerView"
         android:layout_width="395dp"
-        android:layout_height="612dp"
+        android:layout_height="638dp"
         android:layout_above="@+id/layout_input"
         android:layout_marginBottom="13dp" />
 

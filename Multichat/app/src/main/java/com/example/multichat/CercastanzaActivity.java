@@ -34,7 +34,7 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     private RecyclerView recyclerView;
     private Controller controller;
     private EditText stanza_cercata;
-    private Button btnS;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton btnS;
     private int codComando;
     private static String nome_stanza;
 
@@ -55,7 +55,7 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
         controller = new Controller();
 
         stanza_cercata = findViewById(R.id.stanzacercata);
-        btnS = (Button) findViewById(R.id.btn_search);
+        btnS = (com.google.android.material.floatingactionbutton.FloatingActionButton) findViewById(R.id.btn_search);
         btnS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
