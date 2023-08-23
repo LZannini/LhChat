@@ -59,7 +59,7 @@
 #define GIAREGISTRATO 302
 #define CHATVUOTA 306
 #define STANZENONTROVATE 310
-#define RICHIESTAGIAINVIATA 315
+
 
 
 // funzioni per creare le risposte da inviare al client

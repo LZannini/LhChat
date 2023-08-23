@@ -117,7 +117,7 @@ public class StanzeTrovateActivity extends AppCompatActivity implements RoomsAda
                                 alert.show();
                             } else if (codComando == Integer.parseInt(RICHIESTASTANZAERR)) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(StanzeTrovateActivity.this);
-                                builder.setMessage("Si è verificato un errore durante la richiesta d'accesso alla stanza!")
+                                builder.setMessage("Hai già effettuato una richiesta per accedere a questa stanza!")
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {

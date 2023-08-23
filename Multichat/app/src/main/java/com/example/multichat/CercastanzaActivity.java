@@ -139,7 +139,7 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
                                 alert.show();
                             } else if (codComando == Integer.parseInt(RICHIESTASTANZAERR)) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CercastanzaActivity.this);
-                                builder.setMessage("Si è verificato un errore durante la richiesta d'accesso alla stanza!")
+                                builder.setMessage("Hai già effettuato una richiesta per accedere a questa stanza!")
                                         .setCancelable(false)
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {

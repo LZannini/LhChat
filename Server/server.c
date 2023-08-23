@@ -32,8 +32,8 @@ OnlineUser onlineUsers[MAX_USERS];
     int sock = *(int *) arg;
     int read_size;
     int cod_comando;
-    char buffer[2000];
-    char risposta[2000];
+    char buffer[4096];
+    char risposta[4096];
     
     while ((read_size = recv(sock, buffer, 2000, 0)) > 0) {
     if (read_size < 0) {
@@ -45,6 +45,7 @@ OnlineUser onlineUsers[MAX_USERS];
     
     cod_comando = gestisci_richiesta_client(buffer, &risposta, sock);
     if (risposta != NULL) {
+    	//printf("Risposta del server: %s\n", risposta);
         send(sock, risposta, strlen(risposta), 0);
     } else {
         printf("Server: errore durante il recupero delle informazioni richieste");

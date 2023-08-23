@@ -354,7 +354,7 @@ public class Controller {
                     outputStream.write(richiesta.getBytes());
                     outputStream.flush();
                     // Ricezione risposta
-                    byte[] buffer = new byte[2048];
+                    byte[] buffer = new byte[4096];
                     int bytesRead = inputStream.read(buffer);
                     String risposta = new String(buffer, 0, bytesRead);
                     dati = risposta.split("\\|");

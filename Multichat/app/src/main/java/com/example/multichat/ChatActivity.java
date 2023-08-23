@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
                     String formatoData = "yyyy-MM-dd HH:mm:ss";
                     SimpleDateFormat sdf = new SimpleDateFormat(formatoData);
                     for (int i = 1; i < risposta.length; i++) {
-                        String[] dati_messaggi = risposta[i].split("\\,");
+                        String[] dati_messaggi = risposta[i].split("\\£");
                         Date orario = sdf.parse(dati_messaggi[1]);
                         Messaggio messaggio = new Messaggio(dati_messaggi[0], roomId, orario, dati_messaggi[2]);
                         if(messaggio.getMittente().equals(controller.getUtente().getUsername())) {
@@ -193,7 +193,7 @@ public class ChatActivity extends AppCompatActivity {
                                     String formatoData = "yyyy-MM-dd HH:mm:ss";
                                     SimpleDateFormat sdf = new SimpleDateFormat(formatoData);
                                     String[] dati_messaggi = notifica.split("\\|");
-                                    System.out.println("" + dati_messaggi[0] + "," + dati_messaggi[1] + "," + dati_messaggi[2] + "," + dati_messaggi[3]);
+                                    System.out.println("" + dati_messaggi[0] + "£" + dati_messaggi[1] + "£" + dati_messaggi[2] + "£" + dati_messaggi[3]);
                                     Messaggio messaggio;
                                     try {
                                         Date orario = sdf.parse(dati_messaggi[2]);
