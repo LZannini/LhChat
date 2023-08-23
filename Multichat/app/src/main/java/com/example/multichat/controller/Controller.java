@@ -95,7 +95,7 @@ public class Controller {
     private String risposta;
 
     public static final int SERVERPORT = 5000;
-    public static final String SERVER_IP = "192.168.1.172";
+    public static final String SERVER_IP = "192.168.178.116";
 
     public Controller() {
     }
