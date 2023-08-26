@@ -100,17 +100,27 @@ void produci_risposta_vedi_chat(const int comando, PGresult *res, char *risposta
         char *orario_str;
         time_t orario;
         struct tm tm_orario;
+        char risposta_tmp[4096];
         char row_data[4096];
+        char orario_formattato[30];
 
 	snprintf(risposta, 4096, "%d", comando);
+        risposta_tmp[0] = '\0';
         for(i=0; i<righe; i++){
             orario_str = PQgetvalue(res, i, 1);
+            //memset(&tm_orario, 0, sizeof(struct tm));
+            //strptime(orario_str, "%Y-%m-%d %H:%M:%S", &tm_orario);
+            //orario = mktime(&tm_orario);
+            //strftime(orario_formattato, sizeof(orario_formattato), "%Y-%m-%d %H:%M:%S", localtime(&orario));
+            //snprintf(risposta_tmp + strlen(risposta_tmp), sizeof(risposta_tmp) - strlen(risposta_tmp), "|%s,%s,%s", PQgetvalue(res, i, 0), orario_formattato, PQgetvalue(res, i, 2));
             snprintf(row_data, 4096, "|%s£%s£%s", PQgetvalue(res, i, 0), orario_str, PQgetvalue(res, i, 2));
             
             strncat(risposta, row_data, 4096-strlen(risposta) - 1);
         }
 
+        //sprintf(risposta, "%d%s", comando, risposta_tmp);
         printf("Risposta gestore: %s\n\n", risposta);
+        //printf("risposta_tmp gestore: %s\n\n", risposta_tmp);
     }else if(comando == APRICHATERR){
         sprintf(risposta, "%d|Errore durante il caricamento della chat", comando);
     }else if(comando == CHATVUOTA){

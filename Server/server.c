@@ -43,9 +43,10 @@ OnlineUser onlineUsers[MAX_USERS];
         printf("Server: richiesta ricevuta con successo!\n");
     }
     
+    printf("\tRichiesta del client: %s\n", buffer);
     cod_comando = gestisci_richiesta_client(buffer, &risposta, sock);
     if (risposta != NULL) {
-    	//printf("Risposta del server: %s\n", risposta);
+    	printf("\tRisposta del server: %s\n", risposta);
         send(sock, risposta, strlen(risposta), 0);
     } else {
         printf("Server: errore durante il recupero delle informazioni richieste");

@@ -248,7 +248,7 @@ public class Controller {
                     dati = risposta.split("\\|");
                     socket.close();
                 } catch (Exception e) {
-                    System.out.println("Aggiornamento username non riuscito, socket chiusa");
+                    System.out.println("Visualizzazione stanze non riuscita, socket chiusa");
                 }
             }
         });

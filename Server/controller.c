@@ -125,9 +125,10 @@ void richiesta_invia_messaggio(char *richiesta, char *risposta, int socket_fd){
 	testo = strtok(NULL, "|");
 	id_stanza = atoi(id_stanza_str);
 
+printf("-------------------------------L'ORARIO E: %s", orario);
 	memset(&tm_orario, 0, sizeof(struct tm));
 	strptime(orario, "%Y-%m-%d %H:%M:%S", &tm_orario);
-	tm_orario.tm_isdst = -1;
+	tm_orario.tm_isdst = -1; // Imposta il flag DST (Daylight Saving Time) in modo che mktime lo gestisca
 	t_orario = mktime(&tm_orario);
 	inserito = insert_messaggio(mittente, id_stanza, t_orario, testo);
 	
