@@ -79,15 +79,8 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivityForResult(myIntent, 0);
+        finish();
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-        return;
     }
 
     @Override

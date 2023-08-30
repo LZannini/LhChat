@@ -23,10 +23,6 @@ public class RoomsAdapter extends RecyclerView.Adapter<RoomsAdapter.ViewHolder> 
         this.onStanzaListener = onStanzaListener;
     }
 
-   /* public RecyclerViewAdapter(ArrayList<Stanza> lista_stanze) {
-        this.stanze = lista_stanze;
-    }*/
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

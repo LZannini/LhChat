@@ -23,7 +23,6 @@ public class ProfiloActivity extends AppCompatActivity {
     private Button btnLg;
     private int count;
     private AlertDialog.Builder builder;
-    private int codComando;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

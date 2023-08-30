@@ -35,7 +35,6 @@ public class CercastanzaActivity extends AppCompatActivity implements RoomsAdapt
     private Controller controller;
     private EditText stanza_cercata;
     private com.google.android.material.floatingactionbutton.FloatingActionButton btnS;
-    private int codComando;
     private static String nome_stanza;
 
     @SuppressLint("MissingInflatedId")

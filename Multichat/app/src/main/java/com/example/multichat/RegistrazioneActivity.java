@@ -83,17 +83,15 @@ public class RegistrazioneActivity extends AppCompatActivity {
                         AlertDialog alert = builder.create();
                         alert.show();
                     }else if(codComando == Integer.parseInt(controller.REGERR)) {
-                        builder.setMessage("Errore durante la fase di registrazione, riprova!")
+                        builder.setMessage("Questo utente risulta già registrato, effettua il login!")
                                 .setCancelable(false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
+                                        openActivityLogin();
                                     }
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-                        usernameEditText.setText("");
-                        passwordEditText.setText("");
-                        confPassEditText.setText("");
                     }else if(codComando == Integer.parseInt(controller.GIAREGISTRATO)) {
                         builder.setMessage("Questo utente risulta già registrato, effettua il login!")
                                 .setCancelable(false)

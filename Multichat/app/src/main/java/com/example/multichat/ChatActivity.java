@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
     private Controller controller;
     private volatile String notifica;
     private volatile Boolean connectionClosed = true;
-    private Thread t;
+    private Thread chatThread;
     private String nome_admin;
 
 
@@ -155,26 +155,21 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void connettiServer() {
-        t = new Thread(new Runnable() {
+        chatThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 socket = controller.getUtente().getCurrentChatConnection();
                 riceviMessaggiInRealTime();
             }
         });
-        t.start();
+        chatThread.start();
     }
 
     private void riceviMessaggiInRealTime() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try
-                    //System.out.println("wegbwejrg");
-                    //InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                    //BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                    //BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                {
+                try {
                     while (!connectionClosed) {
                         System.out.println("La connessione è ancora aperta.");
                         InputStream inputStream = socket.getInputStream();
@@ -213,7 +208,6 @@ public class ChatActivity extends AppCompatActivity {
                     System.out.println("Uscito dal while");
                 } catch (IOException e) {
                     openActivityHome();
-                    //throw new RuntimeException(e);
                 }
             }
         }).start();
@@ -299,7 +293,7 @@ public class ChatActivity extends AppCompatActivity {
             default:
                 try {
                     connectionClosed = true;
-                    t.join();
+                    chatThread.join();
                     controller.chiudiConnessione();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -330,7 +324,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
         try {
             connectionClosed = true;
-            t.join();
+            chatThread.join();
             controller.chiudiConnessione();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

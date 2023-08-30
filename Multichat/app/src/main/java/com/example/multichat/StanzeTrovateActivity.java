@@ -78,17 +78,9 @@ public class StanzeTrovateActivity extends AppCompatActivity implements RoomsAda
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        //Intent myIntent = new Intent(getApplicationContext(), ChatActivity.class);
-        //startActivityForResult(myIntent, 0);
         finish();
         return true;
     }
-
-    /*@Override
-    public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), ChatActivity.class));
-        return;
-    }*/
 
 
     @Override
