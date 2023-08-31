@@ -8,7 +8,7 @@
 
 2) installare l'applicazione sul proprio device ed avviarla cliccando l'icona.
 
-**#Istruzioni Server:**
+**Istruzioni Server:**
 
 1) Creare un nuovo db e fare un restore con il file "LhChat.sql";
 
