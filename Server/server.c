@@ -43,10 +43,8 @@ OnlineUser onlineUsers[MAX_USERS];
         printf("Server: richiesta ricevuta con successo!\n");
     }
     
-    printf("\tRichiesta del client: %s\n", buffer);
     cod_comando = gestisci_richiesta_client(buffer, &risposta, sock);
     if (risposta != NULL) {
-    	printf("\tRisposta del server: %s\n", risposta);
         send(sock, risposta, strlen(risposta), 0);
     } else {
         printf("Server: errore durante il recupero delle informazioni richieste");
@@ -73,9 +71,8 @@ void mandaMessaggio(char *username, char *notifica, int id_stanza) {
     for (int i = 0; i < onUsersCount; i++) {
         if (onlineUsers[i].id_stanza == id_stanza && strcmp(username, onlineUsers[i].username) != 0) {
             if(send(onlineUsers[i].socket_fd, notifica, strlen(notifica), 0) > 0){
-                printf("funziona\n");
             } else {
-                printf("non funziona\n");
+                printf("Errore durante invio dei messaggi ai client attivi!\n");
             }
         }
     }
