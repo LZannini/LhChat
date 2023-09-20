@@ -30,7 +30,7 @@ PGresult *select_stanze_utente(char *username){
 
     if(conn != NULL)
     {
-        sprintf(query, "select s.id_stanza, s.nome_stanza, s.nome_admin from stanza s join appartenenza_stanza a on s.id_stanza=a.id_stanza where a.username = $$%s$$", username);
+        sprintf(query, "select s.id_stanza, s.nome_stanza, s.nome_admin from stanza s join appartenenza_stanza a on s.id_stanza=a.id_stanza where a.username = $$%s$$ order by nome_stanza", username);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
@@ -54,7 +54,7 @@ PGresult *select_stanze(char *username){
 
     if(conn != NULL)
     {
-        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza where id_stanza not in (select id_stanza from appartenenza_stanza where username = $$%s$$)", username);
+        sprintf(query, "select id_stanza, nome_stanza, nome_admin from stanza where id_stanza not in (select id_stanza from appartenenza_stanza where username = $$%s$$) order by nome_stanza", username);
         res = PQexec(conn, query);
         strcpy(error, PQresultErrorMessage(res));
         if(strlen(error) > 0){
