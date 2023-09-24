@@ -79,8 +79,14 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        finish();
+        openActivityHome();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        openActivityHome();
+        return;
     }
 
     @Override
@@ -168,8 +174,13 @@ public class VediRichiesteActivity extends AppCompatActivity implements Richiest
     }
 
     public void openActivityVediRichieste(){
-        Intent intentH = new Intent(this, VediRichiesteActivity.class);
-        intentH.putExtra("room_id", id_stanza);
+        Intent intentR = new Intent(this, VediRichiesteActivity.class);
+        intentR.putExtra("room_id", id_stanza);
+        startActivity(intentR);
+    }
+
+    private void openActivityHome() {
+        Intent intentH = new Intent(this, HomeActivity.class);
         startActivity(intentH);
     }
 }
